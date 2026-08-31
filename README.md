@@ -40,7 +40,7 @@ The application is built around a flat component tree to prioritize straightforw
 
 1. Clone the repository and navigate into it:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/its-sorakun/todolist.git
    cd notes-web
    ```
 2. Install the required dependencies:
