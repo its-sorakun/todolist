@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ToDoList from './components/ToDoList';
+import { Plus } from 'lucide-react';
 
 export default function App() {
   const [items, setItems] = useState(() => {
@@ -88,9 +89,7 @@ export default function App() {
               type="submit" 
               className="px-6 py-3 sm:px-8 sm:py-4 bg-primary hover:bg-primary-hover text-white rounded-lg sm:rounded-xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 focus:outline-none focus:ring-4 focus:ring-primary/30"
             >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
+              <Plus className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span>Add Task</span>
             </button>
           </form>

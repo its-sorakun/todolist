@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Check, Pencil, Trash2 } from 'lucide-react';
 
 export default function ToDoItem({ item, toggleComplete, deleteItem, editItem }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -33,9 +34,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
           }`}
           aria-label={item.completed ? "Mark as incomplete" : "Mark as complete"}
         >
-          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-          </svg>
+          <Check className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={3} />
         </button>
 
         {/* Content */}
@@ -72,9 +71,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
             className="p-2 sm:p-3 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
             title="Edit"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
+            <Pencil className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         )}
         <button 
@@ -82,9 +79,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
           className="p-2 sm:p-3 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
           title="Delete"
         >
-          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
+          <Trash2 className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       </div>
     </li>
