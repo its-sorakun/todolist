@@ -1,6 +1,15 @@
-# Notes App (Single Note Implementation)
+# Notes App
 
 A React-based single-page application for managing a simple to-do list. The interface is designed to visually mimic a physical sticky note pinned to a procedural corkboard.
+
+![Screenshot of the App](/path/to/your/screenshot.png)
+
+## Features
+
+- Add, edit, and delete tasks
+- Mark tasks as completed
+- Toggle between light and dark modes
+- Automatically saves tasks so you don't lose them when you refresh(using localStorage)
 
 ## Architecture
 
