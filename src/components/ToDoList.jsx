@@ -3,14 +3,14 @@ import ToDoItem from './ToDoItem';
 export default function ToDoList({ items, toggleComplete, deleteItem, editItem }) {
   if (items.length === 0) {
     return (
-      <div className="flex-grow flex flex-col items-center justify-center py-20 px-16 sm:px-20 text-gray-400 dark:text-gray-500">
-        <p className="text-2xl sm:text-3xl text-center transform -rotate-2">Nothing written here yet...</p>
+      <div className="flex-grow flex flex-col items-center justify-center py-16 px-8 text-gray-800/40">
+        <p className="text-3xl text-center transform -rotate-3">Blank slate!</p>
       </div>
     );
   }
 
   return (
-    <div className="flex-grow overflow-y-auto max-h-[65vh] custom-scrollbar">
+    <div className="flex-grow overflow-y-auto max-h-[55vh] px-2 sm:px-4">
       <ul className="flex flex-col">
         {items.map((item) => (
           <ToDoItem

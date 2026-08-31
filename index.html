@@ -4,9 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Notebook ToDo</title>
-    <!-- Handwriting font for the paper aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Sticky Note App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -14,8 +13,7 @@
         theme: {
           extend: {
             colors: {
-              primary: '#3b82f6', // Blueprint blue
-              'primary-hover': '#2563eb',
+              primary: '#2563eb', // Pen blue ink
             },
             fontFamily: {
               paper: ['Kalam', 'cursive'],
@@ -24,8 +22,20 @@
         }
       }
     </script>
+    <style>
+      body {
+        /* Corkboard background */
+        background-color: #d89f67;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
+      }
+      .dark body {
+        /* Dark corkboard */
+        background-color: #5c3a21;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.35'/%3E%3C/svg%3E");
+      }
+    </style>
   </head>
-  <body class="bg-gray-300 text-gray-900 dark:bg-gray-950 dark:text-gray-100 transition-colors duration-300 font-sans">
+  <body class="transition-colors duration-300 font-sans">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
