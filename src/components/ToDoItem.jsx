@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, Check, Circle } from 'lucide-react';
 
 export default function ToDoItem({ item, toggleComplete, deleteItem, editItem }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,32 +17,36 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
 
   return (
     <li 
-      className={`group flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-5 bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-200 ${
+      className={`group flex items-center pl-16 sm:pl-20 pr-4 sm:pr-6 py-3 sm:py-4 border-b border-blue-200 dark:border-blue-800/50 transition-all duration-200 ${
         item.completed 
-          ? 'opacity-60 bg-gray-50 dark:bg-gray-800/80' 
-          : 'hover:shadow-md sm:hover:-translate-y-0.5 hover:border-primary/30'
+          ? 'opacity-70' 
+          : 'hover:bg-blue-50/40 dark:hover:bg-blue-900/20'
       }`}
     >
-      <div className="flex items-center w-full sm:w-auto flex-grow mb-3 sm:mb-0">
-        {/* Checkbox (Custom) */}
+      <div className="flex items-center w-full flex-grow">
+        {/* Hand-drawn style checkbox toggle */}
         <button 
           onClick={() => toggleComplete(item.id)}
-          className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 mr-3 sm:mr-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary/30 ${
+          className={`flex-shrink-0 mr-4 focus:outline-none transition-colors ${
             item.completed 
-              ? 'bg-primary border-primary text-white shadow-sm' 
-              : 'border-gray-300 dark:border-gray-500 text-transparent hover:border-primary dark:hover:border-primary hover:bg-primary/5'
+              ? 'text-primary' 
+              : 'text-gray-300 dark:text-gray-600 hover:text-primary dark:hover:text-primary'
           }`}
           aria-label={item.completed ? "Mark as incomplete" : "Mark as complete"}
         >
-          <Check className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={3} />
+          {item.completed ? (
+            <Check className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={3} />
+          ) : (
+            <Circle className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2} />
+          )}
         </button>
 
         {/* Content */}
-        <div className="flex-grow">
+        <div className="flex-grow min-w-0">
           {isEditing ? (
             <input
               type="text"
-              className="w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-3 py-2 sm:px-4 sm:py-2 border-2 border-blue-500 rounded-md sm:rounded-lg outline-none focus:ring-4 focus:ring-blue-500/20 transition-all text-base sm:text-lg shadow-inner"
+              className="w-full bg-transparent text-gray-900 dark:text-gray-100 outline-none focus:border-b-2 focus:border-primary transition-all text-xl sm:text-2xl"
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit()}
@@ -51,10 +55,11 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
             />
           ) : (
             <span 
-              className={`text-lg sm:text-xl transition-all duration-200 block break-words ${
+              className={`text-xl sm:text-2xl transition-all duration-200 block break-words ${
                 item.completed 
-                  ? 'line-through text-gray-400 dark:text-gray-500' 
-                  : 'text-gray-700 dark:text-gray-200 font-medium'
+                  // Scribble-out effect for completed items
+                  ? 'line-through decoration-wavy decoration-2 decoration-gray-400 dark:decoration-gray-500 text-gray-500 dark:text-gray-400' 
+                  : 'text-gray-800 dark:text-gray-200'
               }`}
             >
               {item.text}
@@ -64,22 +69,22 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
       </div>
 
       {/* Actions */}
-      <div className="flex items-center space-x-2 self-end sm:self-center mt-1 sm:mt-0 sm:ml-4">
+      <div className="flex items-center space-x-1 sm:space-x-2 ml-4 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         {!isEditing && (
           <button 
             onClick={() => setIsEditing(true)}
-            className="p-2 sm:p-3 text-blue-500 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            className="p-2 text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus:outline-none"
             title="Edit"
           >
-            <Pencil className="w-5 h-5 sm:w-5 sm:h-5" />
+            <Pencil className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
           </button>
         )}
         <button 
           onClick={() => deleteItem(item.id)}
-          className="p-2 sm:p-3 text-red-500 dark:text-red-400 bg-red-50/50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
+          className="p-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors focus:outline-none"
           title="Delete"
         >
-          <Trash2 className="w-5 h-5 sm:w-5 sm:h-5" />
+          <Trash2 className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
         </button>
       </div>
     </li>
