@@ -1,16 +1,43 @@
-# React + Vite
+# Notes App (Single Note Implementation)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React-based single-page application for managing a simple to-do list. The interface is designed to visually mimic a physical sticky note pinned to a procedural corkboard.
 
-Currently, two official plugins are available:
+## Architecture
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework**: React via Vite
+- **Styling**: Tailwind CSS
+- **Icons**: lucide-react
+- **State Management**: React `useState` and `useEffect` synced directly to `localStorage`.
+- **Assets**: The corkboard background relies entirely on an inline SVG Data URI using the `<feTurbulence>` primitive to generate procedural noise. There are no external image dependencies.
 
-## React Compiler
+## Technical Details
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The application is built around a flat component tree to prioritize straightforward control flow over unnecessary abstraction. 
 
-## Expanding the Oxlint configuration
+- `App.jsx`: Manages the primary application state (`items`, `darkMode`) and handles the `localStorage` synchronization.
+- `Header.jsx`: Renders the title and the theme toggle.
+- `ToDoList.jsx`: Maps over the item state and handles the empty-state layout.
+- `ToDoItem.jsx`: Handles individual item display, the local editing state, and dispatches mutations (edit, delete, toggle) back to `App.jsx`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Setup Guide
+
+### Prerequisites
+- Node.js installed on your system.
+
+### Installation
+
+1. Clone the repository and navigate into the project directory.
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running Locally
+
+To start the local development server:
+
+```bash
+npm run dev
+```
+
+The application will typically be accessible at `http://localhost:5173`.
