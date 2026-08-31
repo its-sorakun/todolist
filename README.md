@@ -2,7 +2,7 @@
 
 A React-based single-page application for managing a simple to-do list. The interface is designed to visually mimic a physical sticky note pinned to a procedural corkboard.
 
-![Screenshot of the App](/path/to/your/screenshot.png)
+![Screenshot of the App](https://imgh.in/host/kc9qco)
 
 ## Features
 
