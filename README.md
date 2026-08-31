@@ -31,11 +31,18 @@ The application is built around a flat component tree to prioritize straightforw
 ## Setup Guide
 
 ### Prerequisites
-- Node.js installed on your system.
+- [Node.js](https://nodejs.org/) installed on your machine. You can verify your installation by opening your command prompt and running:
+  ```bash
+  node -v
+  ```
 
 ### Installation
 
-1. Clone the repository and navigate into the project directory.
+1. Clone the repository and navigate into it:
+   ```bash
+   git clone <your-repo-url>
+   cd notes-web
+   ```
 2. Install the required dependencies:
    ```bash
    npm install
@@ -43,10 +50,9 @@ The application is built around a flat component tree to prioritize straightforw
 
 ### Running Locally
 
-To start the local development server:
-
+Start the local development server:
 ```bash
 npm run dev
 ```
 
-The application will typically be accessible at `http://localhost:5173`.
+The application will be accessible at `http://localhost:5173`.
