@@ -5,7 +5,6 @@ import ToDoList from './components/ToDoList';
 export default function App() {
   const [items, setItems] = useState(() => {
     // Read from localStorage on mount. This avoids the blink of empty state
-    // if we were to initialize empty and read in a useEffect.
     const saved = localStorage.getItem('todo_items');
     return saved ? JSON.parse(saved) : [];
   });
@@ -71,14 +70,14 @@ export default function App() {
     <div className="min-h-screen flex justify-center items-start pt-12 px-4 pb-12">
       <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-colors duration-300 border border-gray-100 dark:border-gray-700">
         <Header darkMode={darkMode} setDarkMode={setDarkMode} />
-        
+
         <ToDoList
           items={items}
           toggleComplete={toggleComplete}
           deleteItem={deleteItem}
           editItem={editItem}
         />
-        
+
         <div className="p-8 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <form className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" onSubmit={handleAdd}>
             <input
@@ -88,8 +87,8 @@ export default function App() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="px-8 py-4 bg-primary hover:bg-primary-hover text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 focus:outline-none focus:ring-4 focus:ring-primary/30"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
