@@ -85,7 +85,7 @@ export default function App() {
               <input
                 type="text"
                 className="flex-grow px-2 py-2 bg-transparent outline-none text-xl transition-colors placeholder-gray-600 dark:placeholder-gray-400"
-                placeholder="新しいタスク (New Task)..."
+                placeholder="New Task..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />

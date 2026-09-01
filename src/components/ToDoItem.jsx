@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pencil, Trash2, Heart } from 'lucide-react';
+import { Pencil, Trash2, Check, Circle } from 'lucide-react';
 
 export default function ToDoItem({ item, toggleComplete, deleteItem, editItem }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,7 +24,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
       } rounded-xl mx-2`}
     >
       <div className="flex items-start w-full flex-grow mt-1">
-        {/* Heart checkbox toggle */}
+        {/* Checkbox toggle */}
         <button 
           onClick={() => toggleComplete(item.id)}
           className={`flex-shrink-0 mr-3 mt-1 focus:outline-none transition-transform active:scale-75 ${
@@ -35,9 +35,9 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
           aria-label={item.completed ? "Mark as incomplete" : "Mark as complete"}
         >
           {item.completed ? (
-            <Heart className="w-6 h-6" fill="currentColor" strokeWidth={2} />
+            <Check className="w-6 h-6" strokeWidth={3} />
           ) : (
-            <Heart className="w-6 h-6" strokeWidth={2} />
+            <Circle className="w-6 h-6" strokeWidth={2} />
           )}
         </button>
 
