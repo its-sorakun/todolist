@@ -65,19 +65,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4 sm:p-12 overflow-hidden">
+    <div className="min-h-screen flex justify-end items-center p-4 sm:p-12 sm:pr-24 overflow-hidden relative">
       
-      {/* The Sticky Note Container */}
-      <div className="w-full max-w-md bg-[#fdf39b] dark:bg-[#d0c151] shadow-[10px_15px_25px_rgba(0,0,0,0.4)] dark:shadow-[10px_15px_30px_rgba(0,0,0,0.8)] relative transition-all duration-300 font-paper text-gray-800 dark:text-gray-900 transform sm:rotate-2 rotate-0 pb-6 rounded-br-3xl">
+      {/* Frosted Glass Dashboard Panel */}
+      <div className="w-full max-w-md bg-white/30 dark:bg-black/40 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(255,126,179,0.37)] border border-white/40 dark:border-white/10 rounded-3xl relative transition-all duration-300 flex flex-col max-h-[85vh] animate-float">
         
-        {/* Push Pin constructed purely with divs */}
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-50 flex flex-col items-center drop-shadow-lg">
-           <div className="w-7 h-7 rounded-full bg-red-600 shadow-inner relative border border-red-800">
-             <div className="absolute top-1 left-1 w-2.5 h-2.5 bg-red-300 rounded-full opacity-60"></div>
-           </div>
-           <div className="w-1 h-4 bg-gradient-to-b from-gray-300 to-gray-500 -mt-1 shadow-sm"></div>
-        </div>
-
         <div className="relative z-10 flex flex-col h-full mt-4">
           <Header darkMode={darkMode} setDarkMode={setDarkMode} />
           
@@ -88,18 +80,18 @@ export default function App() {
             editItem={editItem}
           />
           
-          <div className="pt-2 px-6 pb-2 transition-colors duration-300">
-            <form className="flex items-center space-x-2 border-b-2 border-black/10 focus-within:border-black/30 transition-colors" onSubmit={handleAdd}>
+          <div className="pt-2 px-6 pb-6 transition-colors duration-300">
+            <form className="flex items-center space-x-2 border-b-2 border-black/20 dark:border-white/20 focus-within:border-primary transition-colors" onSubmit={handleAdd}>
               <input
                 type="text"
-                className="flex-grow px-2 py-1 bg-transparent outline-none text-2xl transition-colors text-gray-800 placeholder-gray-600/40"
-                placeholder="Jot down a task..."
+                className="flex-grow px-2 py-2 bg-transparent outline-none text-xl transition-colors placeholder-gray-600 dark:placeholder-gray-400"
+                placeholder="新しいタスク (New Task)..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
               <button 
                 type="submit" 
-                className="p-2 text-primary hover:text-blue-900 font-bold transition-colors focus:outline-none"
+                className="p-2 text-primary hover:text-pink-600 font-bold transition-colors focus:outline-none"
                 title="Add Task"
               >
                 <Plus strokeWidth={3} className="w-7 h-7" />

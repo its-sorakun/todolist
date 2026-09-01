@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pencil, Trash2, Check, Circle } from 'lucide-react';
+import { Pencil, Trash2, Heart } from 'lucide-react';
 
 export default function ToDoItem({ item, toggleComplete, deleteItem, editItem }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,27 +17,27 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
 
   return (
     <li 
-      className={`group flex items-start px-4 py-2 transition-all duration-200 ${
+      className={`group flex items-start px-4 py-3 transition-all duration-200 ${
         item.completed 
           ? 'opacity-70' 
-          : 'hover:bg-black/5'
-      } rounded-lg`}
+          : 'hover:bg-white/20 dark:hover:bg-white/5'
+      } rounded-xl mx-2`}
     >
       <div className="flex items-start w-full flex-grow mt-1">
-        {/* Hand-drawn style checkbox toggle */}
+        {/* Heart checkbox toggle */}
         <button 
           onClick={() => toggleComplete(item.id)}
-          className={`flex-shrink-0 mr-3 mt-1 focus:outline-none transition-colors ${
+          className={`flex-shrink-0 mr-3 mt-1 focus:outline-none transition-transform active:scale-75 ${
             item.completed 
               ? 'text-primary' 
-              : 'text-gray-700/40 hover:text-primary'
+              : 'text-gray-500/50 hover:text-primary'
           }`}
           aria-label={item.completed ? "Mark as incomplete" : "Mark as complete"}
         >
           {item.completed ? (
-            <Check className="w-6 h-6" strokeWidth={3} />
+            <Heart className="w-6 h-6" fill="currentColor" strokeWidth={2} />
           ) : (
-            <Circle className="w-6 h-6" strokeWidth={2} />
+            <Heart className="w-6 h-6" strokeWidth={2} />
           )}
         </button>
 
@@ -46,7 +46,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
           {isEditing ? (
             <input
               type="text"
-              className="w-full bg-transparent text-gray-900 outline-none border-b-2 border-primary transition-all text-2xl"
+              className="w-full bg-transparent outline-none border-b-2 border-primary transition-all text-xl py-1"
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit()}
@@ -55,11 +55,10 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
             />
           ) : (
             <span 
-              className={`text-2xl transition-all duration-200 block break-words ${
+              className={`text-xl transition-all duration-200 block break-words py-1 ${
                 item.completed 
-                  // Scribble-out effect for completed items
-                  ? 'line-through decoration-wavy decoration-2 decoration-gray-600 text-gray-600' 
-                  : 'text-gray-900'
+                  ? 'line-through opacity-50' 
+                  : ''
               }`}
             >
               {item.text}
@@ -73,7 +72,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
         {!isEditing && (
           <button 
             onClick={() => setIsEditing(true)}
-            className="p-2 text-blue-700/60 hover:text-blue-900 transition-colors focus:outline-none"
+            className="p-2 text-blue-600/80 hover:text-blue-500 transition-colors focus:outline-none"
             title="Edit"
           >
             <Pencil className="w-5 h-5" strokeWidth={2.5} />
@@ -81,7 +80,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
         )}
         <button 
           onClick={() => deleteItem(item.id)}
-          className="p-2 text-red-700/60 hover:text-red-900 transition-colors focus:outline-none"
+          className="p-2 text-red-500/80 hover:text-red-500 transition-colors focus:outline-none"
           title="Delete"
         >
           <Trash2 className="w-5 h-5" strokeWidth={2.5} />
