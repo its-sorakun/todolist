@@ -17,36 +17,38 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
 
   return (
     <li 
-      className={`group flex items-start px-4 py-3 transition-all duration-200 ${
+      className={`group flex items-start px-6 py-4 transition-all duration-200 ${
         item.completed 
-          ? 'opacity-70' 
-          : 'hover:bg-white/20 dark:hover:bg-white/5'
-      } rounded-xl mx-2`}
+          ? 'opacity-60 bg-transparent' 
+          : 'bg-surface dark:bg-surface-dark hover:bg-surface-variant dark:hover:bg-surface-variant-dark shadow-sm'
+      } rounded-2xl`}
     >
-      <div className="flex items-start w-full flex-grow mt-1">
+      <div className="flex items-center w-full flex-grow">
         {/* Checkbox toggle */}
         <button 
           onClick={() => toggleComplete(item.id)}
-          className={`flex-shrink-0 mr-3 mt-1 focus:outline-none transition-transform active:scale-75 ${
+          className={`flex-shrink-0 mr-4 focus:outline-none transition-transform active:scale-75 ${
             item.completed 
-              ? 'text-primary' 
-              : 'text-gray-500/50 hover:text-primary'
+              ? 'text-primary dark:text-primary-dark' 
+              : 'text-gray-400 hover:text-primary dark:hover:text-primary-dark'
           }`}
           aria-label={item.completed ? "Mark as incomplete" : "Mark as complete"}
         >
           {item.completed ? (
-            <Check className="w-6 h-6" strokeWidth={3} />
+            <div className="bg-primary dark:bg-primary-dark text-white dark:text-surface-dark rounded-full p-1 shadow-sm">
+              <Check className="w-6 h-6" strokeWidth={3} />
+            </div>
           ) : (
-            <Circle className="w-6 h-6" strokeWidth={2} />
+            <Circle className="w-8 h-8" strokeWidth={2} />
           )}
         </button>
 
         {/* Content */}
-        <div className="flex-grow min-w-0">
+        <div className="flex-grow min-w-0 flex items-center">
           {isEditing ? (
             <input
               type="text"
-              className="w-full bg-transparent outline-none border-b-2 border-primary transition-all text-xl py-1"
+              className="w-full bg-transparent outline-none border-b-2 border-primary dark:border-primary-dark transition-all text-xl py-1 text-gray-900 dark:text-gray-100"
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit()}
@@ -57,8 +59,8 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
             <span 
               className={`text-xl transition-all duration-200 block break-words py-1 ${
                 item.completed 
-                  ? 'line-through opacity-50' 
-                  : ''
+                  ? 'line-through text-gray-500' 
+                  : 'text-gray-800 dark:text-gray-100'
               }`}
             >
               {item.text}
@@ -68,11 +70,11 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
       </div>
 
       {/* Actions */}
-      <div className="flex items-center space-x-1 ml-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="flex items-center space-x-2 ml-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200 self-center">
         {!isEditing && (
           <button 
             onClick={() => setIsEditing(true)}
-            className="p-2 text-blue-600/80 hover:text-blue-500 transition-colors focus:outline-none"
+            className="p-3 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none rounded-full hover:bg-white dark:hover:bg-black/20"
             title="Edit"
           >
             <Pencil className="w-5 h-5" strokeWidth={2.5} />
@@ -80,7 +82,7 @@ export default function ToDoItem({ item, toggleComplete, deleteItem, editItem })
         )}
         <button 
           onClick={() => deleteItem(item.id)}
-          className="p-2 text-red-500/80 hover:text-red-500 transition-colors focus:outline-none"
+          className="p-3 text-gray-500 hover:text-red-500 transition-colors focus:outline-none rounded-full hover:bg-white dark:hover:bg-black/20"
           title="Delete"
         >
           <Trash2 className="w-5 h-5" strokeWidth={2.5} />

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Waifu Notes</title>
+    <title>Weeb Notes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
@@ -15,35 +15,31 @@
         theme: {
           extend: {
             colors: {
-              primary: '#ff7eb3', // Neon pinkish
+              // Material You Weeb Theme (Pastel Sakura)
+              primary: '#FF8DA1',
+              'primary-container': '#FFD9E2',
+              'on-primary-container': '#3B0014',
+              surface: '#FFF8FA',
+              'surface-container': '#FFEDF4',
+              'surface-variant': '#F2DDE1',
+              
+              // Dark mode variants
+              'primary-dark': '#FFB2C0',
+              'primary-container-dark': '#5C1126',
+              'on-primary-container-dark': '#FFD9E2',
+              'surface-dark': '#1A1114',
+              'surface-container-dark': '#2B1B22',
+              'surface-variant-dark': '#4A333A',
             },
             fontFamily: {
               anime: ['"M PLUS Rounded 1c"', 'sans-serif'],
-            },
-            keyframes: {
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-10px)' },
-              }
-            },
-            animation: {
-              float: 'float 6s ease-in-out infinite',
             }
           }
         }
       }
     </script>
-    <style>
-      body {
-        background-color: #1a1a2e;
-        background-image: url("/bg.png");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-      }
-    </style>
   </head>
-  <body class="transition-colors duration-300 font-anime overflow-hidden text-gray-800 dark:text-gray-200">
+  <body class="transition-colors duration-300 font-anime overflow-hidden bg-surface dark:bg-surface-dark text-gray-900 dark:text-gray-100">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
