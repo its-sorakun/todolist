@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react';
-import Header from './components/Header';
-import ToDoList from './components/ToDoList';
-import { Plus, Gamepad2 } from 'lucide-react';
-
-const noteColors = [
-  { bg: 'bg-pink-400', text: 'text-white' },
-  { bg: 'bg-cyan-400', text: 'text-black' },
-  { bg: 'bg-yellow-400', text: 'text-black' },
-  { bg: 'bg-green-400', text: 'text-black' },
-  { bg: 'bg-purple-400', text: 'text-white' },
-];
+import AestheticTheme from './themes/AestheticTheme';
+import RetroTheme from './themes/RetroTheme';
+import WaifuTheme from './themes/WaifuTheme';
+import { Settings2 } from 'lucide-react';
 
 export default function App() {
   const [notes, setNotes] = useState(() => {
@@ -22,20 +15,23 @@ export default function App() {
     if (oldItems) {
       const parsed = JSON.parse(oldItems);
       if (parsed.length > 0) {
-        return [{ id: Date.now(), title: "Main Quest", items: parsed }];
+        return [{ id: Date.now(), title: "Main Notes", items: parsed }];
       }
     }
-    return [{ id: Date.now(), title: "Main Quest", items: [] }];
+    return [{ id: Date.now(), title: "Main Notes", items: [] }];
   });
 
   const [activeNoteId, setActiveNoteId] = useState(() => notes[0]?.id);
   const [inputValue, setInputValue] = useState('');
 
+  const [theme, setTheme] = useState(() => localStorage.getItem('app_theme') || 'aesthetic');
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('todo_theme');
     if (saved) return saved === 'dark';
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
+
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('todo_notes', JSON.stringify(notes));
@@ -56,9 +52,11 @@ export default function App() {
     }
   }, [darkMode]);
 
+  useEffect(() => {
+    localStorage.setItem('app_theme', theme);
+  }, [theme]);
+
   const activeNote = notes.find(n => n.id === activeNoteId) || notes[0];
-  const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
-  const activeNoteColor = noteColors[Math.max(0, activeNoteIndex) % noteColors.length];
 
   const updateActiveNote = (updates) => {
     setNotes(notes.map(note => 
@@ -69,13 +67,11 @@ export default function App() {
   const handleAdd = (e) => {
     e.preventDefault();
     if (!inputValue.trim() || !activeNote) return;
-
     const newItem = {
       id: Date.now(),
       text: inputValue.trim(),
       completed: false,
     };
-
     updateActiveNote({ items: [...activeNote.items, newItem] });
     setInputValue('');
   };
@@ -108,7 +104,7 @@ export default function App() {
   const addNote = () => {
     const newNote = {
       id: Date.now(),
-      title: "Side Quest",
+      title: "New Note",
       items: []
     };
     setNotes([...notes, newNote]);
@@ -117,98 +113,46 @@ export default function App() {
 
   const deleteNote = (id) => {
     if (notes.length === 1) {
-      setNotes([{ id: Date.now(), title: "Main Quest", items: [] }]);
+      setNotes([{ id: Date.now(), title: "Main Notes", items: [] }]);
     } else {
       setNotes(notes.filter(n => n.id !== id));
     }
   };
 
-  return (
-    <div className="h-screen w-full flex flex-col sm:flex-row overflow-hidden">
-      
-      {/* Sidebar: Neo-Brutalist Weeb */}
-      <div className="w-full sm:w-72 bg-fuchsia-500 dark:bg-slate-900 flex flex-col p-4 sm:border-r-4 border-b-4 sm:border-b-0 border-black dark:border-white z-10 transition-colors">
-        <div className="flex items-center gap-3 px-2 py-4 mb-4">
-           <div className="bg-yellow-400 p-2 rounded-full brutal-border brutal-shadow-sm">
-             <Gamepad2 className="w-8 h-8 text-black" strokeWidth={3} />
-           </div>
-           <h1 className="text-3xl font-black tracking-tight text-white dark:text-pink-400" style={{ textShadow: '2px 2px 0 #000' }}>DATA.LOG</h1>
-        </div>
-        
-        <div className="flex-grow overflow-y-auto space-y-4 custom-scrollbar px-2 py-2">
-           {notes.map((note, index) => {
-             const color = noteColors[index % noteColors.length];
-             const isActive = activeNoteId === note.id;
-             return (
-               <button 
-                 key={note.id} 
-                 onClick={() => setActiveNoteId(note.id)}
-                 className={`w-full text-left px-5 py-4 rounded-xl transition-transform text-lg font-black flex items-center brutal-border ${
-                   isActive 
-                     ? `${color.bg} ${color.text} brutal-shadow translate-x-1 -translate-y-1` 
-                     : `bg-white dark:bg-slate-800 text-black dark:text-white brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 hover:brutal-shadow`
-                 }`}
-               >
-                 <span className="truncate">{note.title || "Untitled"}</span>
-               </button>
-             );
-           })}
-        </div>
+  const themeProps = {
+    notes, activeNoteId, setActiveNoteId,
+    inputValue, setInputValue, activeNote,
+    handleAdd, toggleComplete, deleteItem, editItem,
+    addNote, deleteNote, updateActiveNote,
+    darkMode, setDarkMode
+  };
 
-        <div className="p-2 mt-auto">
+  return (
+    <>
+      {theme === 'aesthetic' && <AestheticTheme {...themeProps} />}
+      {theme === 'retro' && <RetroTheme {...themeProps} />}
+      {theme === 'waifu' && <WaifuTheme {...themeProps} />}
+
+      {/* Global Theme Selector FAB */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="relative">
+          {showThemeSelector && (
+            <div className="absolute bottom-20 right-0 bg-white dark:bg-gray-800 rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)] dark:shadow-none p-4 flex flex-col gap-2 w-56 border border-gray-100 dark:border-gray-700 animate-in fade-in slide-in-from-bottom-4">
+              <h3 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest px-2">Select Theme</h3>
+              <button onClick={() => {setTheme('aesthetic'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'aesthetic' ? 'bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>✨ Aesthetic (MD3)</button>
+              <button onClick={() => {setTheme('retro'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'retro' ? 'bg-yellow-200 dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>👾 Retro Degen</button>
+              <button onClick={() => {setTheme('waifu'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'waifu' ? 'bg-purple-200 dark:bg-purple-900/40 text-purple-900 dark:text-purple-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>🌸 Waifu Glass</button>
+            </div>
+          )}
           <button 
-            onClick={addNote} 
-            className="w-full flex items-center justify-center gap-2 px-4 py-4 bg-white dark:bg-slate-800 text-black dark:text-white brutal-border brutal-shadow-sm hover:brutal-shadow hover:-translate-y-1 transition-all rounded-xl font-black text-xl"
+            onClick={() => setShowThemeSelector(!showThemeSelector)}
+            className="w-16 h-16 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform focus:outline-none"
+            aria-label="Toggle Theme Selector"
           >
-            <Plus className="w-6 h-6" strokeWidth={4} />
-            NEW FILE
+            <Settings2 className="w-8 h-8" />
           </button>
         </div>
       </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col p-4 sm:p-8 relative transition-colors">
-        {activeNote && (
-          <div className="flex-1 bg-white dark:bg-slate-900 brutal-border brutal-shadow rounded-2xl flex flex-col overflow-hidden relative transition-colors duration-300">
-            <Header 
-              darkMode={darkMode} 
-              setDarkMode={setDarkMode} 
-              title={activeNote.title}
-              onTitleChange={(newTitle) => updateActiveNote({ title: newTitle })}
-              onDelete={() => deleteNote(activeNote.id)}
-            />
-            
-            <ToDoList
-              items={activeNote.items}
-              toggleComplete={toggleComplete}
-              deleteItem={deleteItem}
-              editItem={editItem}
-            />
-            
-            <div className="p-4 sm:p-8 pb-8 bg-gray-50 dark:bg-slate-800 border-t-4 border-black dark:border-white">
-              <form 
-                className="flex items-center space-x-4 bg-white dark:bg-slate-900 px-4 py-2 rounded-xl brutal-border brutal-shadow-sm focus-within:translate-x-1 focus-within:-translate-y-1 focus-within:brutal-shadow transition-all"
-                onSubmit={handleAdd}
-              >
-                <input
-                  type="text"
-                  className="flex-grow py-3 bg-transparent outline-none text-2xl transition-colors placeholder-gray-400 text-gray-900 dark:text-gray-100 font-bold"
-                  placeholder="ENTER NEW OBJECTIVE..."
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
-                <button 
-                  type="submit" 
-                  className={`p-3 ${activeNoteColor.bg} ${activeNoteColor.text} brutal-border brutal-shadow-sm hover:brutal-shadow hover:-translate-y-1 active:translate-y-0 active:box-shadow-none rounded-xl font-black transition-all focus:outline-none flex-shrink-0`}
-                  title="Add Task"
-                >
-                  <Plus strokeWidth={4} className="w-7 h-7" />
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
