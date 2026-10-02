@@ -45,10 +45,14 @@ export default function App() {
   }, [notes]);
 
   useEffect(() => {
-    if (!notes.find(n => n.id === activeNoteId) && notes.length > 0) {
-      setActiveNoteId(notes[0].id);
+    if (activeNoteId && !notes.find(n => n.id === activeNoteId) && notes.length > 0) {
+      if (theme === 'notesos') {
+        setActiveNoteId(null);
+      } else {
+        setActiveNoteId(notes[0].id);
+      }
     }
-  }, [notes, activeNoteId]);
+  }, [notes, activeNoteId, theme]);
 
   useEffect(() => {
     localStorage.setItem('todo_theme', darkMode ? 'dark' : 'light');
