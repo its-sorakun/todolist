@@ -1,37 +1,34 @@
-# Notes App
+# Notes Web
 
-A React-based single-page application for managing a simple to-do list. The interface is designed to visually mimic a physical sticky note pinned to a procedural corkboard.
+A React-based single-page application for taking notes. This project began as a simple to-do list but evolved into a multi-theme rich-text editor to investigate how far UI paradigms can be pushed in a browser without relying on heavy external state managers or windowing libraries.
 
-![Screenshot of the App](https://imgh.in/host/kc9qco)
+## Themes & Paradigms
 
-## Features
+The application doesn't just change colors; it completely swaps the layout and interaction model based on the selected theme.
 
-- Add, edit, and delete tasks
-- Mark tasks as completed
-- Toggle between light and dark modes
-- Automatically saves tasks so you don't lose them when you refresh(using localStorage)
+- **NotesOS**: A desktop environment built in the DOM. Notes are rendered as standalone windows that can be dragged by their title bars, resized from any of the four corners, minimized, or maximized to perfectly snap against the taskbar. It implements its own window coordinate math natively in React.
+- **Aesthetic (MD3)**: A modern, conventional sidebar-driven layout inspired by Material Design 3.
+- **Sticky (Corkboard)**: A physical metaphor. Notes are rendered as sticky notes pinned to a corkboard. The cork texture uses an inline SVG Data URI with the `<feTurbulence>` primitive to generate procedural noise without any image assets.
+- **Retro Degen**: A brutalist, terminal-inspired layout with stark colors and hard shadows.
+
+## Mechanics
+
+- **Rich Text**: Uses `tiptap` as a headless wrapper around ProseMirror to provide a clean WYSIWYG editing experience.
+- **Window Management (NotesOS)**: Draggable windows are handled natively. When dragging, `setPointerCapture` ensures the drag event isn't lost if the mouse moves too fast. Resizing calculates deltas from the `startX`/`startY` coordinates and dynamically updates the bounds. 
+- **Persistence**: There is no backend. The application relies entirely on `localStorage` to persist the state between sessions. This includes the notes themselves (saved as HTML strings), the active theme, the user's uploaded local wallpaper (saved as a base64 Data URL), and the absolute `x/y/width/height` geometry of every window in NotesOS so they stay exactly where they were left.
 
 ## Architecture
 
-- **Framework**: React via Vite
-- **Styling**: Tailwind CSS
-- **Icons**: lucide-react
-- **State Management**: React `useState` and `useEffect` synced directly to `localStorage`.
-- **Assets**: The corkboard background relies entirely on an inline SVG Data URI using the `<feTurbulence>` primitive to generate procedural noise. There are no external image dependencies.
+The component tree is kept intentionally flat to avoid unnecessary abstraction layers.
 
-## Technical Details
-
-The application is built around a flat component tree to prioritize straightforward control flow over unnecessary abstraction. 
-
-- `App.jsx`: Manages the primary application state (`items`, `darkMode`) and handles the `localStorage` synchronization.
-- `Header.jsx`: Renders the title and the theme toggle.
-- `ToDoList.jsx`: Maps over the item state and handles the empty-state layout.
-- `ToDoItem.jsx`: Handles individual item display, the local editing state, and dispatches mutations (edit, delete, toggle) back to `App.jsx`.
+- `App.jsx`: The global state container. It handles the `localStorage` hydration for notes and the active theme, and renders the corresponding theme component.
+- `themes/*`: Each theme (`NotesOSTheme`, `AestheticTheme`, etc.) receives the notes state and mutation functions as props. They are fully responsible for their own internal UI layout and local interactions (like window coordinates).
+- `components/RichTextEditor.jsx`: A universal text editor component shared across all themes.
 
 ## Setup Guide
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) installed on your machine. You can verify your installation by opening your command prompt and running:
+- [Node.js](https://nodejs.org/) installed. Verify by running:
   ```bash
   node -v
   ```
