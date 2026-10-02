@@ -12,10 +12,15 @@ export default function WaifuTheme({
 
   // Automatically open the active note if it's not already open
   useEffect(() => {
-    if (activeNoteId && !openWindows.includes(activeNoteId)) {
-      setOpenWindows(prev => [...prev, activeNoteId]);
+    if (activeNoteId) {
+      setOpenWindows(prev => {
+        if (!prev.includes(activeNoteId)) {
+          return [...prev, activeNoteId];
+        }
+        return prev;
+      });
     }
-  }, [activeNoteId, openWindows]);
+  }, [activeNoteId]);
 
   const toggleWindow = (id) => {
     if (openWindows.includes(id)) {
@@ -159,26 +164,28 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
     >
       {/* Window Header */}
       <div 
-        className="h-12 bg-white/40 dark:bg-black/40 flex justify-between items-center px-4 cursor-grab active:cursor-grabbing border-b border-white/40 dark:border-white/10 flex-shrink-0 group"
+        className="h-10 bg-white/40 dark:bg-black/40 flex justify-between items-center cursor-grab active:cursor-grabbing border-b border-white/40 dark:border-white/10 flex-shrink-0 group"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onDoubleClick={() => setIsMaximized(!isMaximized)}
       >
-        <div className="flex items-center gap-2 no-drag w-20">
-          <button onClick={closeWindow} className="w-3.5 h-3.5 rounded-full bg-red-400 hover:bg-red-500 transition-colors shadow-sm flex items-center justify-center text-transparent hover:text-red-900">
-             <span className="text-[9px] font-black leading-none pb-0.5 opacity-0 hover:opacity-100 transition-opacity">×</span>
-          </button>
-          <button onClick={() => setIsMaximized(!isMaximized)} className="w-3.5 h-3.5 rounded-full bg-yellow-400 hover:bg-yellow-500 transition-colors shadow-sm"></button>
-          <button onClick={() => setIsMaximized(!isMaximized)} className="w-3.5 h-3.5 rounded-full bg-green-400 hover:bg-green-500 transition-colors shadow-sm"></button>
+        <div className="flex items-center gap-2 px-4 no-drag">
+           {/* We can put a small icon here if we want, or just leave it empty for windows style */}
         </div>
-        <div className="font-bold text-gray-800 dark:text-gray-200 text-sm tracking-widest pointer-events-none drop-shadow-sm truncate px-4 flex-1 text-center">
+        <div className="font-bold text-gray-800 dark:text-gray-200 text-xs tracking-widest pointer-events-none drop-shadow-sm truncate flex-1 text-left pl-2">
           {note.title || "UNTITLED.MD"}
         </div>
-        <div className="w-20 flex justify-end no-drag opacity-0 group-hover:opacity-100 transition-opacity">
-           <button onClick={() => { deleteNote(note.id); closeWindow(); }} className="text-red-500 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-500/10 transition-colors">
-             <Trash2 className="w-4 h-4" />
-           </button>
+        <div className="flex items-center no-drag px-2">
+          <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200">
+             <span className="text-lg leading-none mt-[-8px]">_</span>
+          </button>
+          <button onClick={() => setIsMaximized(!isMaximized)} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200">
+             <span className="text-lg leading-none mt-[-2px]">□</span>
+          </button>
+          <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200">
+             <span className="text-xl leading-none mt-[-2px]">×</span>
+          </button>
         </div>
       </div>
 
@@ -197,6 +204,11 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
             content={note.content} 
             onChange={(html) => updateActiveNote({ content: html })} 
           />
+        </div>
+        <div className="mt-3 flex justify-end no-drag">
+           <button onClick={() => { deleteNote(note.id); closeWindow(); }} className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors font-bold">
+             <Trash2 className="w-4 h-4" /> Delete File
+           </button>
         </div>
       </div>
     </div>
