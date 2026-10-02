@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium, Image as ImageIcon } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium, Image as ImageIcon, LayoutGrid, Monitor } from 'lucide-react';
 import { getModalClasses } from '../utils/themeConfig';
 import RichTextEditor from '../components/RichTextEditor';
 
@@ -23,6 +23,16 @@ export default function WaifuTheme({
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => console.log(err));
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   // Automatically open the active note if it's not already open
   useEffect(() => {
@@ -103,7 +113,7 @@ export default function WaifuTheme({
               className="h-10 px-3 flex items-center justify-center gap-2 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black dark:text-white group"
               title="Application Launcher"
             >
-              <Terminal className="w-5 h-5 text-pink-500 dark:text-pink-400 group-hover:text-pink-600 dark:group-hover:text-pink-300" />
+              <LayoutGrid className="w-5 h-5 text-blue-500 dark:text-blue-400 group-hover:text-blue-600 dark:group-hover:text-blue-300" />
             </button>
             
             {/* Start Menu Popover */}
@@ -112,6 +122,13 @@ export default function WaifuTheme({
                 <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-black/5 dark:border-white/10 mb-1">
                   System Menu
                 </div>
+                <button 
+                  onClick={() => { toggleFullScreen(); setIsMenuOpen(false); }} 
+                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200 font-medium"
+                >
+                  <Monitor className="w-5 h-5 text-teal-500" />
+                  Toggle Fullscreen
+                </button>
                 <button 
                   onClick={() => { setDarkMode(!darkMode); setIsMenuOpen(false); }} 
                   className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200 font-medium"

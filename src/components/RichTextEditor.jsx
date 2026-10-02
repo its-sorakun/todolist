@@ -8,7 +8,7 @@ import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
-import { Bold, Italic, List, ListOrdered, Image as ImageIcon, Heading2, FileCode2, Table as TableIcon, CheckSquare, Maximize, Minimize } from 'lucide-react'
+import { Bold, Italic, List, ListOrdered, Image as ImageIcon, Heading2, FileCode2, Table as TableIcon, CheckSquare } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { marked } from 'marked'
 import TurndownService from 'turndown'
@@ -159,33 +159,9 @@ const CustomTableCell = TableCell.extend({
 export default function RichTextEditor({ content, onChange, editable = true, theme = 'aesthetic' }) {
   const [isMarkdownMode, setIsMarkdownMode] = useState(false);
   const [markdownText, setMarkdownText] = useState("");
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
   const [imagePrompt, setImagePrompt] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [imageWidth, setImageWidth] = useState("");
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = async () => {
-    try {
-      if (!document.fullscreenElement) {
-        await document.documentElement.requestFullscreen();
-      } else {
-        if (document.exitFullscreen) {
-          await document.exitFullscreen();
-        }
-      }
-    } catch (err) {
-      console.error("Error attempting to enable fullscreen:", err);
-    }
-  };
 
   const editor = useEditor({
     extensions: [
@@ -290,9 +266,6 @@ export default function RichTextEditor({ content, onChange, editable = true, the
           
           {isMarkdownMode && <div className="ml-2 text-sm font-bold opacity-60 tracking-wider">MARKDOWN EDIT</div>}
           <div className="flex-grow"></div>
-          <button onClick={toggleFullscreen} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors mr-1`} title="Toggle Fullscreen">
-            {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
-          </button>
           <button onClick={toggleMarkdownMode} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isMarkdownMode ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}`} title="Toggle Markdown View"><FileCode2 size={18} /></button>
         </div>
       )}
