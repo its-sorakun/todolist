@@ -324,12 +324,12 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
   return (
     <div 
       onPointerDownCapture={onFocus}
-      className={`absolute flex flex-col bg-white/50 dark:bg-[#1a1a2e]/70 backdrop-blur-3xl border border-white/60 dark:border-white/10 rounded-2xl overflow-hidden shadow-2xl transition-all duration-200 ${
+      className={`absolute flex flex-col bg-white/50 dark:bg-[#1a1a2e]/70 backdrop-blur-3xl border border-white/60 dark:border-white/10 overflow-hidden shadow-2xl transition-all duration-200 ${
         isActive ? 'z-40 ring-1 ring-pink-400/50 shadow-[0_20px_50px_rgba(255,126,179,0.3)]' : 'z-30 hover:z-30 opacity-95'
-      }`}
+      } ${isMaximized ? 'rounded-none border-0' : 'rounded-2xl'}`}
       style={
         isMaximized 
-        ? { top: '20px', left: '20px', right: '20px', bottom: '120px', width: 'auto', height: 'auto' }
+        ? { top: '0px', left: '0px', right: '0px', bottom: '48px', width: 'auto', height: 'auto' }
         : { left: position.x, top: position.y, width: size.width, height: size.height }
       }
     >
@@ -344,42 +344,37 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
         <div className="flex items-center gap-2 px-4 no-drag">
            {/* We can put a small icon here if we want, or just leave it empty for windows style */}
         </div>
-        <div className="font-bold text-gray-800 dark:text-gray-200 text-xs tracking-widest pointer-events-none drop-shadow-sm truncate flex-1 text-left pl-2">
-          {note.title || "UNTITLED.MD"}
-        </div>
+        <input 
+          type="text"
+          value={note.title}
+          onChange={(e) => updateActiveNote({ title: e.target.value })}
+          className="font-bold text-gray-800 dark:text-gray-200 text-sm tracking-wide bg-transparent outline-none truncate flex-1 text-left pl-2 no-drag"
+          placeholder="Untitled Note"
+        />
         <div className="flex items-center no-drag px-2">
-          <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200">
+          <button onClick={() => { deleteNote(note.id); closeWindow(); }} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200" title="Delete">
+             <Trash2 className="w-4 h-4" />
+          </button>
+          <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200" title="Minimize">
              <span className="text-lg leading-none mt-[-8px]">_</span>
           </button>
-          <button onClick={() => setIsMaximized(!isMaximized)} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200">
+          <button onClick={() => setIsMaximized(!isMaximized)} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200" title="Maximize">
              <span className="text-lg leading-none mt-[-2px]">□</span>
           </button>
-          <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200">
+          <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200" title="Close">
              <span className="text-xl leading-none mt-[-2px]">×</span>
           </button>
         </div>
       </div>
 
       {/* Editor Content Area */}
-      <div className="flex-1 flex flex-col p-6 overflow-hidden no-drag bg-white/30 dark:bg-black/30">
-        <input 
-          type="text"
-          value={note.title}
-          onChange={(e) => updateActiveNote({ title: e.target.value })}
-          className="text-4xl font-black bg-transparent outline-none border-b-2 border-transparent focus:border-pink-400/50 pb-2 mb-4 w-full text-gray-900 dark:text-gray-100 placeholder-gray-500/60 transition-colors"
-          placeholder="Document Title..."
-        />
-        <div className="flex-1 overflow-hidden relative rounded-2xl bg-white/60 dark:bg-black/50 border border-white/70 dark:border-white/10 shadow-inner">
+      <div className={`flex-1 flex flex-col overflow-hidden no-drag bg-white/30 dark:bg-black/30 ${isMaximized ? 'p-0' : 'p-4'}`}>
+        <div className={`flex-1 overflow-hidden relative bg-white/60 dark:bg-black/50 shadow-inner ${isMaximized ? 'rounded-none border-0' : 'rounded-2xl border border-white/70 dark:border-white/10'}`}>
           <RichTextEditor 
             theme={theme}
             content={note.content} 
             onChange={(html) => updateActiveNote({ content: html })} 
           />
-        </div>
-        <div className="mt-3 flex justify-end no-drag">
-           <button onClick={() => { deleteNote(note.id); closeWindow(); }} className="flex items-center gap-1 text-sm text-red-500 hover:text-red-600 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-colors font-bold">
-             <Trash2 className="w-4 h-4" /> Delete File
-           </button>
         </div>
       </div>
 
