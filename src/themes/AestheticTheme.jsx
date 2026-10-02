@@ -51,15 +51,15 @@ export default function AestheticTheme({
         <div className="p-2 mt-auto flex gap-2 relative">
           <button 
             onClick={addNote} 
-            className="flex-grow flex items-center justify-center gap-2 px-6 py-5 bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333] text-gray-800 dark:text-gray-200 rounded-[28px] transition-all font-bold shadow-sm hover:shadow-md"
+            className="flex-grow flex items-center justify-center gap-2 px-4 py-4 bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333] text-gray-800 dark:text-gray-200 rounded-[28px] transition-all font-bold shadow-sm hover:shadow-md h-[64px]"
           >
-            <Plus className="w-6 h-6" strokeWidth={2.5} />
-            New Document
+            <Plus className="w-6 h-6 flex-shrink-0" strokeWidth={2.5} />
+            <span className="whitespace-nowrap">New Document</span>
           </button>
           
           <button 
             onClick={() => setShowThemeSelector(!showThemeSelector)}
-            className="w-[72px] h-[72px] flex-shrink-0 bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333] text-gray-800 dark:text-gray-200 rounded-[28px] flex items-center justify-center shadow-sm hover:shadow-md transition-all focus:outline-none"
+            className="w-[64px] h-[64px] flex-shrink-0 bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333] text-gray-800 dark:text-gray-200 rounded-[28px] flex items-center justify-center shadow-sm hover:shadow-md transition-all focus:outline-none"
             aria-label="Toggle Theme Selector"
           >
             <Settings2 className="w-6 h-6" strokeWidth={2.5} />
