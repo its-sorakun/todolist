@@ -78,7 +78,8 @@ export default function WaifuTheme({
         body {
           background-color: ${darkMode ? '#1a1a2e' : '#f5f5f5'};
           background-image: url("${bgUrl}");
-          background-size: cover;
+          background-size: contain;
+          background-repeat: no-repeat;
           background-position: center;
           background-attachment: fixed;
         }
@@ -196,9 +197,9 @@ export default function WaifuTheme({
             <Volume2 className="w-4 h-4" />
             <BatteryMedium className="w-4 h-4" />
           </div>
-          <div className="text-xs font-mono font-medium text-gray-800 dark:text-gray-300 px-2 flex flex-col items-end leading-none justify-center">
+          <div className="text-xs font-mono font-medium text-gray-800 dark:text-gray-300 px-2 flex flex-col items-end leading-[1.2] justify-center">
             <span>{currentTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            <span className="text-[10px] text-gray-500">{currentTime.toLocaleDateString()}</span>
+            <span className="text-[10px] opacity-70">{currentTime.toLocaleDateString()}</span>
           </div>
         </div>
       </div>
