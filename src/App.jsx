@@ -103,7 +103,7 @@ export default function App() {
   const themeProps = {
     notes, activeNoteId, setActiveNoteId, activeNote,
     addNote, deleteNote: requestDeleteNote, updateActiveNote,
-    darkMode, setDarkMode, theme
+    darkMode, setDarkMode, theme, setTheme
   };
 
   const modalClasses = getModalClasses(theme);
@@ -115,27 +115,6 @@ export default function App() {
       {theme === 'waifu' && <WaifuTheme {...themeProps} />}
       {theme === 'sticky' && <StickyTheme {...themeProps} />}
 
-      {/* Global Theme Selector FAB */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <div className="relative">
-          {showThemeSelector && (
-            <div className="absolute bottom-20 right-0 bg-white dark:bg-gray-800 rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)] dark:shadow-none p-4 flex flex-col gap-2 w-64 border border-gray-100 dark:border-gray-700 animate-in fade-in slide-in-from-bottom-4">
-              <h3 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest px-2">Select Theme</h3>
-              <button onClick={() => {setTheme('aesthetic'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'aesthetic' ? 'bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>✨ Aesthetic (MD3)</button>
-              <button onClick={() => {setTheme('sticky'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'sticky' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>📌 Corkboard</button>
-              <button onClick={() => {setTheme('retro'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'retro' ? 'bg-yellow-200 dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>👾 Retro Degen</button>
-              <button onClick={() => {setTheme('waifu'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-2xl font-bold transition-all ${theme === 'waifu' ? 'bg-purple-200 dark:bg-purple-900/40 text-purple-900 dark:text-purple-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200'}`}>🌸 Waifu Glass</button>
-            </div>
-          )}
-          <button 
-            onClick={() => setShowThemeSelector(!showThemeSelector)}
-            className="w-16 h-16 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform focus:outline-none"
-            aria-label="Toggle Theme Selector"
-          >
-            <Settings2 className="w-8 h-8" />
-          </button>
-        </div>
-      </div>
       {/* Delete Confirmation Modal */}
       {noteToDelete && (
         <div className={`fixed inset-0 z-[100] flex items-center justify-center animate-in fade-in duration-200 ${modalClasses.overlay}`}>

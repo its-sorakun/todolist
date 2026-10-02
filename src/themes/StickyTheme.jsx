@@ -4,7 +4,7 @@ import RichTextEditor from '../components/RichTextEditor';
 export default function StickyTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme
+  darkMode, setDarkMode, theme, setTheme
 }) {
   return (
     <div className="h-screen w-full overflow-y-auto bg-[#c19a6b] relative font-handwriting text-black">
@@ -27,6 +27,19 @@ export default function StickyTheme({
         >
           <Plus strokeWidth={3} /> New Sticky
         </button>
+        <div className="flex gap-2">
+          {['aesthetic', 'sticky', 'retro', 'waifu'].map((t) => (
+            <button 
+              key={t}
+              onClick={() => setTheme(t)}
+              className={`px-4 py-2 text-xl font-bold rounded shadow-md transform rotate-1 hover:rotate-0 hover:scale-110 transition-all ${
+                theme === t ? 'bg-[#ff9e9e] text-red-900' : 'bg-[#eecbad] text-orange-900'
+              }`}
+            >
+              {t === 'aesthetic' ? 'MD3' : t === 'sticky' ? 'Cork' : t === 'retro' ? 'Retro' : 'Waifu'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Sticky Notes Grid */}

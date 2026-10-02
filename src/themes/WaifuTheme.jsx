@@ -6,7 +6,7 @@ import RichTextEditor from '../components/RichTextEditor';
 export default function WaifuTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme
+  darkMode, setDarkMode, theme, setTheme
 }) {
   // Keep track of which windows are open on the desktop
   const [openWindows, setOpenWindows] = useState([]);
@@ -15,9 +15,13 @@ export default function WaifuTheme({
   const [windowPrefs, setWindowPrefs] = useState({});
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [bgUrl, setBgUrl] = useState('/bg.png');
+  const [bgUrl, setBgUrl] = useState(() => localStorage.getItem('waifu_bg') || '/bg.png');
   const [showBgPrompt, setShowBgPrompt] = useState(false);
   const [tempBgUrl, setTempBgUrl] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('waifu_bg', bgUrl);
+  }, [bgUrl]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -120,7 +124,7 @@ export default function WaifuTheme({
             {isMenuOpen && (
               <div className="absolute bottom-12 left-0 mb-2 w-64 bg-white/90 dark:bg-[#1a1a2e]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-xl shadow-2xl p-2 flex flex-col gap-1 z-[70] animate-in fade-in slide-in-from-bottom-2">
                 <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-black/5 dark:border-white/10 mb-1">
-                  System Menu
+                  System Settings
                 </div>
                 <button 
                   onClick={() => { toggleFullScreen(); setIsMenuOpen(false); }} 
@@ -143,6 +147,13 @@ export default function WaifuTheme({
                   <ImageIcon className="w-5 h-5 text-purple-500" />
                   Change Background
                 </button>
+                
+                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-t border-black/5 dark:border-white/10 my-1 mt-2">
+                  Change Theme
+                </div>
+                <button onClick={() => setTheme('aesthetic')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">✨ Aesthetic (MD3)</button>
+                <button onClick={() => setTheme('sticky')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">📌 Corkboard</button>
+                <button onClick={() => setTheme('retro')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">👾 Retro Degen</button>
               </div>
             )}
           </div>

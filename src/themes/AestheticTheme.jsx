@@ -1,4 +1,5 @@
-import { Sun, Moon, Trash2, Plus, Sparkles } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Sparkles, Settings2 } from 'lucide-react';
+import { useState } from 'react';
 import RichTextEditor from '../components/RichTextEditor';
 
 const aestheticColors = [
@@ -12,8 +13,9 @@ const aestheticColors = [
 export default function AestheticTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme
+  darkMode, setDarkMode, theme, setTheme
 }) {
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
   const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
 
   return (
@@ -100,6 +102,28 @@ export default function AestheticTheme({
             </div>
           </div>
         )}
+      </div>
+
+      {/* Theme Selector FAB */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="relative">
+          {showThemeSelector && (
+            <div className="absolute bottom-20 right-0 bg-white dark:bg-[#2a2a2a] rounded-[28px] shadow-2xl p-4 flex flex-col gap-2 w-64 border border-gray-100 dark:border-white/5 animate-in fade-in slide-in-from-bottom-4">
+              <h3 className="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest px-2">Select Theme</h3>
+              <button onClick={() => {setTheme('aesthetic'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'aesthetic' ? 'bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>✨ Aesthetic (MD3)</button>
+              <button onClick={() => {setTheme('sticky'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'sticky' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>📌 Corkboard</button>
+              <button onClick={() => {setTheme('retro'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'retro' ? 'bg-yellow-200 dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>👾 Retro Degen</button>
+              <button onClick={() => {setTheme('waifu'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'waifu' ? 'bg-purple-200 dark:bg-purple-900/40 text-purple-900 dark:text-purple-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>🌸 Waifu Glass</button>
+            </div>
+          )}
+          <button 
+            onClick={() => setShowThemeSelector(!showThemeSelector)}
+            className="w-16 h-16 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-[24px] flex items-center justify-center shadow-xl hover:scale-110 transition-transform focus:outline-none"
+            aria-label="Toggle Theme Selector"
+          >
+            <Settings2 className="w-8 h-8" />
+          </button>
+        </div>
       </div>
     </div>
   );
