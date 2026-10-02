@@ -1,15 +1,13 @@
-import { Trash2, Plus, Check, Circle } from 'lucide-react';
-import { useState } from 'react';
+import { Trash2, Plus } from 'lucide-react';
+import RichTextEditor from '../components/RichTextEditor';
 
 export default function StickyTheme({
-  notes, activeNoteId, setActiveNoteId,
-  inputValue, setInputValue, activeNote,
-  handleAdd, toggleComplete, deleteItem, editItem,
+  notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode
 }) {
   return (
-    <div className="h-screen w-full overflow-y-auto bg-[#c19a6b] relative font-handwriting">
+    <div className="h-screen w-full overflow-y-auto bg-[#c19a6b] relative font-handwriting text-black">
       
       {/* SVG Noise for Corkboard Texture */}
       <style>{`
@@ -41,13 +39,7 @@ export default function StickyTheme({
             isActive={note.id === activeNoteId}
             onFocus={() => setActiveNoteId(note.id)}
             updateActiveNote={updateActiveNote}
-            toggleComplete={toggleComplete}
-            deleteItem={deleteItem}
-            editItem={editItem}
             deleteNote={deleteNote}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            handleAdd={handleAdd}
           />
         ))}
       </div>
@@ -56,16 +48,14 @@ export default function StickyTheme({
 }
 
 function StickyNote({ 
-  note, index, isActive, onFocus, updateActiveNote, 
-  toggleComplete, deleteItem, editItem, deleteNote,
-  inputValue, setInputValue, handleAdd
+  note, index, isActive, onFocus, updateActiveNote, deleteNote
 }) {
   const rotation = [-2, 3, -1, 2, -3][index % 5];
   const color = ['bg-[#fdf09d]', 'bg-[#ff9e9e]', 'bg-[#98f5ff]', 'bg-[#b9ffb0]', 'bg-[#eecbad]'][index % 5];
 
   return (
     <div 
-      className={`relative w-80 min-h-[300px] ${color} shadow-[0_10px_30px_rgba(0,0,0,0.3)] p-6 transition-all duration-300 flex flex-col ${isActive ? 'scale-110 z-20 shadow-[0_20px_50px_rgba(0,0,0,0.4)]' : 'hover:scale-105 z-10'}`}
+      className={`relative w-80 min-h-[300px] ${color} shadow-[0_10px_30px_rgba(0,0,0,0.3)] p-6 transition-all duration-300 flex flex-col ${isActive ? 'scale-110 z-20 shadow-[0_20px_50px_rgba(0,0,0,0.4)] w-[400px] min-h-[400px]' : 'hover:scale-105 z-10'}`}
       style={{ transform: isActive ? `rotate(0deg)` : `rotate(${rotation}deg)` }}
       onClick={onFocus}
     >
@@ -75,7 +65,7 @@ function StickyNote({
       </div>
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-4 group border-b border-black/10 pb-2 flex-shrink-0 mt-2">
+      <div className="flex justify-between items-center mb-2 group border-b border-black/10 pb-2 flex-shrink-0 mt-2">
         <input 
           type="text"
           value={note.title}
@@ -92,52 +82,14 @@ function StickyNote({
         </button>
       </div>
 
-      {/* Items */}
-      <ul className="space-y-2 mb-14 flex-grow overflow-y-auto custom-scrollbar pr-2">
-        {note.items.map(item => (
-          <li key={item.id} className="flex items-start group">
-            <button 
-              onClick={(e) => { e.stopPropagation(); if (isActive) toggleComplete(item.id); }}
-              className="mt-1 mr-2 text-black/70 hover:text-black transition-colors"
-              disabled={!isActive}
-            >
-              {item.completed ? <Check className="w-6 h-6 text-blue-600" /> : <Circle className="w-6 h-6" />}
-            </button>
-            <span className={`text-2xl flex-grow font-bold ${item.completed ? 'line-through text-black/40' : 'text-black/80'}`}>
-              {item.text}
-            </span>
-            <button 
-              onClick={(e) => { e.stopPropagation(); if (isActive) deleteItem(item.id); }}
-              className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 ml-2"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {/* Input Form (Only visible when active) */}
-      {isActive && (
-        <form 
-          className="absolute bottom-4 left-6 right-6 flex items-center border-b border-black/30 pb-1"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!inputValue.trim()) return;
-            handleAdd(e);
-          }}
-        >
-          <input
-            type="text"
-            className="flex-grow bg-transparent outline-none text-2xl placeholder-black/30 text-black font-bold"
-            placeholder="Jot down a task..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <button type="submit" className="text-blue-600 hover:text-blue-800 font-bold">
-            <Plus strokeWidth={3} className="w-6 h-6" />
-          </button>
-        </form>
-      )}
+      {/* Editor */}
+      <div className="flex-grow overflow-hidden text-black/80">
+        <RichTextEditor 
+          content={note.content} 
+          onChange={(html) => isActive && updateActiveNote({ content: html })} 
+          editable={isActive}
+        />
+      </div>
     </div>
   );
 }

@@ -9,22 +9,23 @@ export default function App() {
   const [notes, setNotes] = useState(() => {
     const savedNotes = localStorage.getItem('todo_notes');
     if (savedNotes) {
-      const parsed = JSON.parse(savedNotes);
+      let parsed = JSON.parse(savedNotes);
+      // Migration script: if notes have 'items' from old checklist structure, convert them to HTML 'content'
+      if (parsed.length > 0 && parsed[0].items !== undefined) {
+        parsed = parsed.map(note => {
+          let htmlContent = '';
+          if (note.items && note.items.length > 0) {
+            htmlContent = `<ul>${note.items.map(item => `<li><p>${item.completed ? `<s>${item.text}</s>` : item.text}</p></li>`).join('')}</ul>`;
+          }
+          return { id: note.id, title: note.title, content: htmlContent };
+        });
+      }
       if (parsed.length > 0) return parsed;
     }
-    const oldItems = localStorage.getItem('todo_items');
-    if (oldItems) {
-      const parsed = JSON.parse(oldItems);
-      if (parsed.length > 0) {
-        return [{ id: Date.now(), title: "Main Notes", items: parsed }];
-      }
-    }
-    return [{ id: Date.now(), title: "Main Notes", items: [] }];
+    return [{ id: Date.now(), title: "Main Notes", content: "" }];
   });
 
   const [activeNoteId, setActiveNoteId] = useState(() => notes[0]?.id);
-  const [inputValue, setInputValue] = useState('');
-
   const [theme, setTheme] = useState(() => localStorage.getItem('app_theme') || 'aesthetic');
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('todo_theme');
@@ -65,48 +66,11 @@ export default function App() {
     ));
   };
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    if (!inputValue.trim() || !activeNote) return;
-    const newItem = {
-      id: Date.now(),
-      text: inputValue.trim(),
-      completed: false,
-    };
-    updateActiveNote({ items: [...activeNote.items, newItem] });
-    setInputValue('');
-  };
-
-  const toggleComplete = (id) => {
-    if (!activeNote) return;
-    updateActiveNote({
-      items: activeNote.items.map((item) =>
-        item.id === id ? { ...item, completed: !item.completed } : item
-      )
-    });
-  };
-
-  const deleteItem = (id) => {
-    if (!activeNote) return;
-    updateActiveNote({
-      items: activeNote.items.filter((item) => item.id !== id)
-    });
-  };
-
-  const editItem = (id, newText) => {
-    if (!activeNote) return;
-    updateActiveNote({
-      items: activeNote.items.map((item) =>
-        item.id === id ? { ...item, text: newText } : item
-      )
-    });
-  };
-
   const addNote = () => {
     const newNote = {
       id: Date.now(),
-      title: "New Note",
-      items: []
+      title: "New Document",
+      content: ""
     };
     setNotes([...notes, newNote]);
     setActiveNoteId(newNote.id);
@@ -114,16 +78,14 @@ export default function App() {
 
   const deleteNote = (id) => {
     if (notes.length === 1) {
-      setNotes([{ id: Date.now(), title: "Main Notes", items: [] }]);
+      setNotes([{ id: Date.now(), title: "Main Notes", content: "" }]);
     } else {
       setNotes(notes.filter(n => n.id !== id));
     }
   };
 
   const themeProps = {
-    notes, activeNoteId, setActiveNoteId,
-    inputValue, setInputValue, activeNote,
-    handleAdd, toggleComplete, deleteItem, editItem,
+    notes, activeNoteId, setActiveNoteId, activeNote,
     addNote, deleteNote, updateActiveNote,
     darkMode, setDarkMode
   };

@@ -1,24 +1,19 @@
-import { Sun, Moon, Trash2, Plus, Gamepad2, Check, Circle, Pencil } from 'lucide-react';
-import { useState } from 'react';
+import { Sun, Moon, Trash2, Plus, Gamepad2 } from 'lucide-react';
+import RichTextEditor from '../components/RichTextEditor';
 
 const retroColors = [
-  { bg: 'bg-pink-400', text: 'text-white', check: 'bg-white text-black' },
-  { bg: 'bg-cyan-400', text: 'text-black', check: 'bg-black text-white' },
-  { bg: 'bg-yellow-400', text: 'text-black', check: 'bg-black text-white' },
-  { bg: 'bg-green-400', text: 'text-black', check: 'bg-black text-white' },
-  { bg: 'bg-purple-400', text: 'text-white', check: 'bg-white text-black' },
+  { bg: 'bg-pink-400', text: 'text-white' },
+  { bg: 'bg-cyan-400', text: 'text-black' },
+  { bg: 'bg-yellow-400', text: 'text-black' },
+  { bg: 'bg-green-400', text: 'text-black' },
+  { bg: 'bg-purple-400', text: 'text-white' },
 ];
 
 export default function RetroTheme({
-  notes, activeNoteId, setActiveNoteId,
-  inputValue, setInputValue, activeNote,
-  handleAdd, toggleComplete, deleteItem, editItem,
+  notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode
 }) {
-  const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
-  const activeColor = retroColors[Math.max(0, activeNoteIndex) % retroColors.length];
-
   return (
     <div className="h-screen w-full flex flex-col sm:flex-row overflow-hidden bg-retro-grid font-anime text-black dark:text-white transition-colors">
       
@@ -68,7 +63,7 @@ export default function RetroTheme({
           <div className="flex-1 bg-white dark:bg-slate-900 brutal-border brutal-shadow rounded-2xl flex flex-col overflow-hidden relative transition-colors duration-300">
             
             {/* Header */}
-            <header className="flex justify-between items-center px-8 sm:px-10 pt-10 pb-6 transition-colors duration-300 group border-b-4 border-black dark:border-white bg-yellow-300 dark:bg-pink-600">
+            <header className="flex justify-between items-center px-8 sm:px-10 pt-10 pb-6 transition-colors duration-300 group border-b-4 border-black dark:border-white bg-yellow-300 dark:bg-pink-600 flex-shrink-0">
               <input 
                 type="text"
                 value={activeNote.title}
@@ -86,75 +81,19 @@ export default function RetroTheme({
               </div>
             </header>
             
-            {/* To Do List */}
-            <ul className="flex-grow overflow-y-auto px-6 sm:px-10 py-8 space-y-6 custom-scrollbar bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNSkiLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wNSkiLz48L3N2Zz4=')]">
-              {activeNote.items.length === 0 ? (
-                <div className="flex-grow flex flex-col items-center justify-center py-10 text-center">
-                  <div className="bg-pink-400 p-6 brutal-border brutal-shadow rounded-full mb-6 rotate-12">
-                    <Gamepad2 className="w-20 h-20 text-white" strokeWidth={2} />
-                  </div>
-                  <p className="text-4xl font-black text-black dark:text-white uppercase tracking-tighter">No Objectives!</p>
-                </div>
-              ) : (
-                activeNote.items.map((item, index) => {
-                  const itemColor = retroColors[index % retroColors.length];
-                  return <RetroToDoItem key={item.id} item={item} color={itemColor} toggleComplete={toggleComplete} deleteItem={deleteItem} editItem={editItem} />
-                })
-              )}
-            </ul>
-            
-            {/* Input Form */}
-            <div className="p-4 sm:p-8 pb-8 bg-gray-50 dark:bg-slate-800 border-t-4 border-black dark:border-white">
-              <form 
-                className="flex items-center space-x-4 bg-white dark:bg-slate-900 px-4 py-2 rounded-xl brutal-border brutal-shadow-sm focus-within:translate-x-1 focus-within:-translate-y-1 focus-within:brutal-shadow transition-all"
-                onSubmit={handleAdd}
-              >
-                <input
-                  type="text"
-                  className="flex-grow py-3 bg-transparent outline-none text-2xl transition-colors placeholder-gray-400 text-gray-900 dark:text-gray-100 font-bold"
-                  placeholder="ENTER NEW OBJECTIVE..."
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+            {/* Rich Text Editor with Retro Background */}
+            <div className="flex-grow overflow-hidden px-4 sm:px-8 py-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNSkiLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wNSkiLz48L3N2Zz4=')]">
+              <div className="bg-white/80 dark:bg-slate-900/80 rounded-xl brutal-border h-full p-2 backdrop-blur-sm">
+                <RichTextEditor 
+                  content={activeNote.content} 
+                  onChange={(html) => updateActiveNote({ content: html })} 
                 />
-                <button type="submit" className={`p-3 ${activeColor.bg} ${activeColor.text} brutal-border brutal-shadow-sm hover:brutal-shadow hover:-translate-y-1 active:translate-y-0 rounded-xl font-black transition-all focus:outline-none flex-shrink-0`}>
-                  <Plus strokeWidth={4} className="w-7 h-7" />
-                </button>
-              </form>
+              </div>
             </div>
+            
           </div>
         )}
       </div>
     </div>
-  );
-}
-
-function RetroToDoItem({ item, color, toggleComplete, deleteItem, editItem }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(item.text);
-
-  const handleEditSubmit = () => {
-    if (editText.trim()) { editItem(item.id, editText.trim()); setIsEditing(false); }
-    else { setEditText(item.text); setIsEditing(false); }
-  };
-
-  return (
-    <li className={`group flex items-start px-6 py-4 transition-all duration-200 brutal-border ${item.completed ? 'bg-gray-200 dark:bg-slate-800 brutal-shadow-sm opacity-60 grayscale' : `${color.bg} brutal-shadow hover:-translate-y-1 hover:translate-x-1`} rounded-xl`}>
-      <div className="flex items-center w-full flex-grow">
-        <button onClick={() => toggleComplete(item.id)} className={`flex-shrink-0 mr-4 w-8 h-8 rounded bg-white dark:bg-slate-900 brutal-border brutal-shadow-sm flex items-center justify-center focus:outline-none transition-transform active:scale-90`}>
-          {item.completed && <Check className={`w-6 h-6 text-black dark:text-white`} strokeWidth={4} />}
-        </button>
-        <div className="flex-grow min-w-0 flex items-center">
-          {isEditing ? (
-            <input type="text" className={`w-full bg-white dark:bg-slate-900 brutal-border outline-none transition-all text-2xl py-2 px-3 text-black dark:text-white font-black rounded-lg`} value={editText} onChange={(e) => setEditText(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit()} onBlur={handleEditSubmit} autoFocus />
-          ) : (
-            <span className={`text-2xl transition-all duration-200 block break-words py-1 font-black uppercase tracking-tight ${item.completed ? 'line-through text-gray-500' : color.text}`}>{item.text}</span>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center space-x-2 ml-4 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200 self-center">
-        {!isEditing && <button onClick={() => setIsEditing(true)} className="p-2 bg-white dark:bg-slate-900 brutal-border brutal-shadow-sm hover:-translate-y-1 active:translate-y-0 text-black dark:text-white rounded-lg transition-all focus:outline-none"><Pencil className="w-5 h-5" strokeWidth={3} /></button>}
-        <button onClick={() => deleteItem(item.id)} className="p-2 bg-white dark:bg-slate-900 brutal-border brutal-shadow-sm hover:-translate-y-1 active:translate-y-0 text-red-500 rounded-lg transition-all focus:outline-none"><Trash2 className="w-5 h-5" strokeWidth={3} /></button>
-      </div>
-    </li>
   );
 }

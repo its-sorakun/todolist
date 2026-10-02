@@ -1,5 +1,5 @@
-import { Sun, Moon, Trash2, Plus, Sparkles, Check, Circle, Pencil } from 'lucide-react';
-import { useState } from 'react';
+import { Sun, Moon, Trash2, Plus, Sparkles } from 'lucide-react';
+import RichTextEditor from '../components/RichTextEditor';
 
 const aestheticColors = [
   { bg: 'bg-rose-100 dark:bg-rose-900/40', text: 'text-rose-900 dark:text-rose-100', primary: 'bg-rose-300 dark:bg-rose-700', hover: 'hover:bg-rose-200 dark:hover:bg-rose-800/50' },
@@ -10,14 +10,11 @@ const aestheticColors = [
 ];
 
 export default function AestheticTheme({
-  notes, activeNoteId, setActiveNoteId,
-  inputValue, setInputValue, activeNote,
-  handleAdd, toggleComplete, deleteItem, editItem,
+  notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode
 }) {
   const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
-  const activeColor = aestheticColors[Math.max(0, activeNoteIndex) % aestheticColors.length];
 
   return (
     <div className="h-screen w-full flex flex-col sm:flex-row overflow-hidden bg-slate-50 dark:bg-[#121212] transition-colors duration-500 font-anime">
@@ -55,7 +52,7 @@ export default function AestheticTheme({
             className="w-full flex items-center justify-center gap-2 px-6 py-5 bg-white dark:bg-[#2a2a2a] hover:bg-gray-50 dark:hover:bg-[#333] text-gray-800 dark:text-gray-200 rounded-[28px] transition-all font-bold shadow-sm hover:shadow-md"
           >
             <Plus className="w-6 h-6" strokeWidth={2.5} />
-            New Collection
+            New Document
           </button>
         </div>
       </div>
@@ -66,13 +63,13 @@ export default function AestheticTheme({
           <div className="flex-1 bg-white dark:bg-[#1e1e1e] rounded-[40px] flex flex-col overflow-hidden relative transition-colors duration-500 shadow-sm border border-gray-100 dark:border-white/5">
             
             {/* Header */}
-            <header className="flex justify-between items-center px-10 sm:px-16 pt-12 pb-6 transition-colors duration-300 group">
+            <header className="flex justify-between items-center px-10 sm:px-16 pt-12 pb-2 transition-colors duration-300 group flex-shrink-0">
               <input 
                 type="text"
                 value={activeNote.title}
                 onChange={(e) => updateActiveNote({ title: e.target.value })}
                 className="text-5xl sm:text-6xl font-bold tracking-tight bg-transparent outline-none w-full mr-4 text-gray-800 dark:text-gray-50 placeholder-gray-300 dark:placeholder-gray-700"
-                placeholder="Collection Title..."
+                placeholder="Document Title..."
               />
               <div className="flex items-center space-x-4 flex-shrink-0">
                 <button 
@@ -92,84 +89,16 @@ export default function AestheticTheme({
               </div>
             </header>
             
-            {/* List */}
-            <ul className="flex-grow overflow-y-auto px-10 sm:px-16 py-6 space-y-3 custom-scrollbar">
-              {activeNote.items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full opacity-50">
-                  <p className="text-2xl font-bold text-gray-400">Such empty...</p>
-                </div>
-              ) : (
-                activeNote.items.map((item, index) => {
-                  const itemColor = aestheticColors[index % aestheticColors.length];
-                  return (
-                    <AestheticToDoItem 
-                      key={item.id} item={item} color={itemColor} 
-                      toggleComplete={toggleComplete} deleteItem={deleteItem} editItem={editItem} 
-                    />
-                  );
-                })
-              )}
-            </ul>
-            
-            {/* Input Form */}
-            <div className="p-8 sm:p-12 pb-10">
-              <form 
-                className={`flex items-center space-x-4 ${activeColor.bg} px-8 py-3 rounded-full transition-all`}
-                onSubmit={handleAdd}
-              >
-                <input
-                  type="text"
-                  className={`flex-grow py-4 bg-transparent outline-none text-2xl transition-colors placeholder-gray-500/50 ${activeColor.text} font-bold`}
-                  placeholder="Add a new thought..."
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
-                <button 
-                  type="submit" 
-                  className={`p-5 ${activeColor.primary} text-white rounded-full hover:scale-105 active:scale-95 font-bold transition-all shadow-sm focus:outline-none flex-shrink-0`}
-                  title="Add Task"
-                >
-                  <Plus strokeWidth={3} className="w-6 h-6" />
-                </button>
-              </form>
+            {/* Rich Text Editor */}
+            <div className="flex-grow overflow-hidden px-8 sm:px-14 pb-8 text-gray-800 dark:text-gray-200">
+              <RichTextEditor 
+                content={activeNote.content} 
+                onChange={(html) => updateActiveNote({ content: html })} 
+              />
             </div>
           </div>
         )}
       </div>
     </div>
-  );
-}
-
-function AestheticToDoItem({ item, color, toggleComplete, deleteItem, editItem }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(item.text);
-
-  const handleEditSubmit = () => {
-    if (editText.trim()) {
-      editItem(item.id, editText.trim());
-      setIsEditing(false);
-    } else {
-      setEditText(item.text);
-      setIsEditing(false);
-    }
-  };
-
-  return (
-    <li className={`group flex items-center px-6 py-5 transition-all duration-300 rounded-[32px] ${item.completed ? 'opacity-40 bg-gray-50 dark:bg-white/5 grayscale' : `${color.bg} hover:scale-[1.01]`}`}>
-      <button onClick={() => toggleComplete(item.id)} className={`flex-shrink-0 mr-6 transition-transform active:scale-75 ${item.completed ? 'text-gray-400' : color.text}`}>
-        {item.completed ? <div className="bg-gray-400 text-white rounded-full p-1"><Check className="w-6 h-6" strokeWidth={3} /></div> : <Circle className="w-8 h-8" strokeWidth={2.5} />}
-      </button>
-      <div className="flex-grow min-w-0">
-        {isEditing ? (
-          <input type="text" className={`w-full bg-transparent outline-none border-b-2 border-black/10 dark:border-white/10 text-xl py-1 ${color.text} font-bold`} value={editText} onChange={(e) => setEditText(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleEditSubmit()} onBlur={handleEditSubmit} autoFocus />
-        ) : (
-          <span className={`text-xl transition-all duration-200 block break-words font-bold ${item.completed ? 'line-through text-gray-500' : color.text}`}>{item.text}</span>
-        )}
-      </div>
-      <div className="flex items-center space-x-2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity">
-        {!isEditing && <button onClick={() => setIsEditing(true)} className="p-3 text-gray-400 hover:text-blue-500 rounded-full hover:bg-white/50 dark:hover:bg-black/20 transition-all"><Pencil className="w-5 h-5" strokeWidth={2.5} /></button>}
-        <button onClick={() => deleteItem(item.id)} className="p-3 text-gray-400 hover:text-red-500 rounded-full hover:bg-white/50 dark:hover:bg-black/20 transition-all"><Trash2 className="w-5 h-5" strokeWidth={2.5} /></button>
-      </div>
-    </li>
   );
 }
