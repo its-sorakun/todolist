@@ -289,11 +289,9 @@ export default function RichTextEditor({ content, onChange, editable = true, the
           
           {isMarkdownMode && <div className="ml-2 text-sm font-bold opacity-60 tracking-wider">MARKDOWN EDIT</div>}
           <div className="flex-grow"></div>
-          {theme !== 'aesthetic' && (
-            <button onClick={toggleFullscreen} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors mr-1`} title="Toggle Fullscreen">
-              {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
-            </button>
-          )}
+          <button onClick={toggleFullscreen} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors mr-1`} title="Toggle Fullscreen">
+            {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+          </button>
           <button onClick={toggleMarkdownMode} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isMarkdownMode ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}`} title="Toggle Markdown View"><FileCode2 size={18} /></button>
         </div>
       )}
