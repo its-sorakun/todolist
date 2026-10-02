@@ -4,7 +4,7 @@ import RichTextEditor from '../components/RichTextEditor';
 export default function WaifuTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode
+  darkMode, setDarkMode, theme
 }) {
   return (
     <div className="min-h-screen flex justify-end items-center p-4 sm:p-12 sm:pr-24 overflow-hidden relative font-anime">
@@ -69,6 +69,8 @@ export default function WaifuTheme({
               <div className="flex-grow overflow-hidden px-6 py-2 text-gray-900 dark:text-gray-100">
                 <div className="bg-white/20 dark:bg-black/20 rounded-2xl h-full p-1 border border-white/30 dark:border-white/5">
                   <RichTextEditor 
+                    theme={theme}
+                    key={activeNote.id}
                     content={activeNote.content} 
                     onChange={(html) => updateActiveNote({ content: html })} 
                   />

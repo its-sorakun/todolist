@@ -6,11 +6,14 @@ import { Table } from '@tiptap/extension-table'
 import { TableRow } from '@tiptap/extension-table-row'
 import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
-import { Bold, Italic, List, ListOrdered, Image as ImageIcon, Heading2, FileCode2, Table as TableIcon } from 'lucide-react'
-import { useState } from 'react'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
+import { Bold, Italic, List, ListOrdered, Image as ImageIcon, Heading2, FileCode2, Table as TableIcon, CheckSquare, Maximize, Minimize } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { marked } from 'marked'
 import TurndownService from 'turndown'
 import { gfm } from 'turndown-plugin-gfm'
+import { getModalClasses } from '../utils/themeConfig'
 
 import { Mark, mergeAttributes } from '@tiptap/core'
 
@@ -21,7 +24,21 @@ const turndownService = new TurndownService({
   codeBlockStyle: 'fenced'
 })
 turndownService.use(gfm)
-turndownService.keep(['table', 'tr', 'td', 'th', 'tbody', 'thead', 'img', 'hr', 'span'])
+turndownService.keep(['table', 'tr', 'td', 'th', 'tbody', 'thead', 'hr'])
+
+turndownService.addRule('keepImg', {
+  filter: 'img',
+  replacement: function (content, node) {
+    return node.outerHTML;
+  }
+});
+
+turndownService.addRule('keepSpan', {
+  filter: 'span',
+  replacement: function (content, node) {
+    return node.outerHTML;
+  }
+});
 
 // Create a custom FontSize Mark extension
 const FontSize = Mark.create({
@@ -139,15 +156,44 @@ const CustomTableCell = TableCell.extend({
   },
 })
 
-export default function RichTextEditor({ content, onChange, editable = true }) {
+export default function RichTextEditor({ content, onChange, editable = true, theme = 'aesthetic' }) {
   const [isMarkdownMode, setIsMarkdownMode] = useState(false);
   const [markdownText, setMarkdownText] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const [imagePrompt, setImagePrompt] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageWidth, setImageWidth] = useState("");
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.error("Error attempting to enable fullscreen:", err);
+    }
+  };
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       ResizableImage,
       FontSize,
+      TaskList,
+      TaskItem.configure({ nested: true }),
       Table.configure({ resizable: true }),
       TableRow,
       TableHeader,
@@ -180,26 +226,28 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
     setIsMarkdownMode(!isMarkdownMode);
   };
 
-  const addImage = () => {
-    if (isMarkdownMode) {
-      const url = window.prompt('Enter image URL:');
-      const width = window.prompt('Enter width (e.g. 300, 50%, or leave blank):');
-      if (url) {
-        const imgTag = width ? `<img src="${url}" width="${width}" />` : `![](${url})`;
+  const handleImageSubmit = () => {
+    if (imagePrompt.isMarkdownMode) {
+      if (imageUrl) {
+        const imgTag = imageWidth ? `<img src="${imageUrl}" width="${imageWidth}" />` : `![](${imageUrl})`;
         setMarkdownText(prev => prev + '\n' + imgTag + '\n');
       }
-      return;
-    }
-
-    const url = window.prompt('Enter image URL (e.g., https://example.com/image.jpg)');
-    if (url) {
-      const width = window.prompt('Enter image width in pixels (e.g., 300) or leave empty for default:', '');
-      if (width) {
-        editor.chain().focus().setImage({ src: url, width: width }).run();
-      } else {
-        editor.chain().focus().setImage({ src: url }).run();
+    } else {
+      if (imageUrl) {
+        if (imageWidth) {
+          editor.chain().focus().setImage({ src: imageUrl, width: imageWidth }).run();
+        } else {
+          editor.chain().focus().setImage({ src: imageUrl }).run();
+        }
       }
     }
+    setImagePrompt(null);
+    setImageUrl("");
+    setImageWidth("");
+  };
+
+  const addImage = () => {
+    setImagePrompt({ isMarkdownMode });
   };
 
   const handleIncreaseFontSize = () => {
@@ -216,6 +264,8 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
     editor.chain().focus().setFontSize(newSize).run();
   };
 
+  const modalClasses = getModalClasses(theme);
+
   return (
     <div className="flex flex-col h-full w-full">
       {editable && (
@@ -229,6 +279,7 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
               <button onClick={handleDecreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Decrease Font Size">A-</button>
               <button onClick={handleIncreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Increase Font Size">A+</button>
               <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
+              <button onClick={() => editor.chain().focus().toggleTaskList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('taskList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Checklist"><CheckSquare size={18} /></button>
               <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bulletList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bullet List"><List size={18} /></button>
               <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('orderedList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Numbered List"><ListOrdered size={18} /></button>
               <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
@@ -239,6 +290,9 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
           
           {isMarkdownMode && <div className="ml-2 text-sm font-bold opacity-60 tracking-wider">MARKDOWN EDIT</div>}
           <div className="flex-grow"></div>
+          <button onClick={toggleFullscreen} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors mr-1`} title="Toggle Fullscreen">
+            {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+          </button>
           <button onClick={toggleMarkdownMode} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isMarkdownMode ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}`} title="Toggle Markdown View"><FileCode2 size={18} /></button>
         </div>
       )}
@@ -258,6 +312,53 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
           />
         )}
       </div>
+
+      {/* Image Prompt Modal */}
+      {imagePrompt && (
+        <div className={`fixed inset-0 z-[100] flex items-center justify-center animate-in fade-in duration-200 ${modalClasses.overlay}`}>
+          <div className={`m-4 max-w-sm w-full transform transition-all scale-in-100 ${modalClasses.container}`}>
+            <h2 className={`${modalClasses.title}`}>Insert Image</h2>
+            <div className="space-y-4 mb-8">
+              <div>
+                <label className="block text-sm font-bold opacity-70 mb-2">Image URL</label>
+                <input 
+                  type="text" 
+                  value={imageUrl} 
+                  onChange={(e) => setImageUrl(e.target.value)} 
+                  className={`${modalClasses.input}`}
+                  placeholder="https://example.com/image.jpg"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-bold opacity-70 mb-2">Width (Optional)</label>
+                <input 
+                  type="text" 
+                  value={imageWidth} 
+                  onChange={(e) => setImageWidth(e.target.value)} 
+                  className={`${modalClasses.input}`}
+                  placeholder="e.g. 300, 50%, or 800px"
+                  onKeyDown={(e) => e.key === 'Enter' && handleImageSubmit()}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => { setImagePrompt(null); setImageUrl(""); setImageWidth(""); }}
+                className={`${modalClasses.buttonCancel}`}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleImageSubmit}
+                className={`${modalClasses.buttonSubmit}`}
+              >
+                Insert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

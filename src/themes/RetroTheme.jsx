@@ -12,7 +12,7 @@ const retroColors = [
 export default function RetroTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode
+  darkMode, setDarkMode, theme
 }) {
   return (
     <div className="h-screen w-full flex flex-col sm:flex-row overflow-hidden bg-retro-grid font-anime text-black dark:text-white transition-colors">
@@ -85,6 +85,8 @@ export default function RetroTheme({
             <div className="flex-grow overflow-hidden px-4 sm:px-8 py-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNSkiLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wNSkiLz48L3N2Zz4=')]">
               <div className="bg-white/80 dark:bg-slate-900/80 rounded-xl brutal-border h-full p-2 backdrop-blur-sm">
                 <RichTextEditor 
+                  theme={theme}
+                  key={activeNote.id}
                   content={activeNote.content} 
                   onChange={(html) => updateActiveNote({ content: html })} 
                 />

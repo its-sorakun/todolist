@@ -4,7 +4,7 @@ import RichTextEditor from '../components/RichTextEditor';
 export default function StickyTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode
+  darkMode, setDarkMode, theme
 }) {
   return (
     <div className="h-screen w-full overflow-y-auto bg-[#c19a6b] relative font-handwriting text-black">
@@ -40,6 +40,7 @@ export default function StickyTheme({
             onFocus={() => setActiveNoteId(note.id)}
             updateActiveNote={updateActiveNote}
             deleteNote={deleteNote}
+            theme={theme}
           />
         ))}
       </div>
@@ -48,7 +49,7 @@ export default function StickyTheme({
 }
 
 function StickyNote({ 
-  note, index, isActive, onFocus, updateActiveNote, deleteNote
+  note, index, isActive, onFocus, updateActiveNote, deleteNote, theme
 }) {
   const rotation = [-2, 3, -1, 2, -3][index % 5];
   const color = ['bg-[#fdf09d]', 'bg-[#ff9e9e]', 'bg-[#98f5ff]', 'bg-[#b9ffb0]', 'bg-[#eecbad]'][index % 5];
@@ -85,6 +86,7 @@ function StickyNote({
       {/* Editor */}
       <div className="flex-grow overflow-hidden text-black/80">
         <RichTextEditor 
+          theme={theme}
           content={note.content} 
           onChange={(html) => isActive && updateActiveNote({ content: html })} 
           editable={isActive}

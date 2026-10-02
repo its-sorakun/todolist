@@ -12,7 +12,7 @@ const aestheticColors = [
 export default function AestheticTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode
+  darkMode, setDarkMode, theme
 }) {
   const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
 
@@ -23,7 +23,7 @@ export default function AestheticTheme({
       <div className="w-full sm:w-80 bg-slate-100/50 dark:bg-[#1e1e1e]/50 flex flex-col p-6 z-10">
         <div className="flex items-center gap-3 px-4 py-6 mb-4">
            <Sparkles className="w-8 h-8 text-pink-400 dark:text-pink-300" strokeWidth={2.5} />
-           <h1 className="text-3xl font-bold tracking-tight text-gray-800 dark:text-gray-100">Lofi Notes</h1>
+           <h1 className="text-3xl font-bold tracking-tight text-gray-800 dark:text-gray-100">Notes</h1>
         </div>
         
         <div className="flex-grow overflow-y-auto space-y-2 custom-scrollbar px-2">
@@ -92,6 +92,8 @@ export default function AestheticTheme({
             {/* Rich Text Editor */}
             <div className="flex-grow overflow-hidden px-8 sm:px-14 pb-8 text-gray-800 dark:text-gray-200">
               <RichTextEditor 
+                theme={theme}
+                key={activeNote.id}
                 content={activeNote.content} 
                 onChange={(html) => updateActiveNote({ content: html })} 
               />

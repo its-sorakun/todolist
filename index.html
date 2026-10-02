@@ -53,6 +53,40 @@
         pointer-events: none;
         height: 0;
       }
+
+      /* TipTap TaskList Fix */
+      ul[data-type="taskList"] {
+        list-style: none;
+        padding: 0;
+      }
+      ul[data-type="taskList"] li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+      }
+      ul[data-type="taskList"] li > label {
+        margin-right: 0.75rem;
+        user-select: none;
+        margin-top: 0.25rem;
+      }
+      ul[data-type="taskList"] li > div {
+        flex: 1;
+        min-width: 0;
+      }
+      ul[data-type="taskList"] li > div > p {
+        margin: 0;
+        transition: all 0.2s ease-in-out;
+      }
+      ul[data-type="taskList"] li[data-checked="true"] > div > p {
+        text-decoration: line-through;
+        opacity: 0.6;
+      }
+      ul[data-type="taskList"] input[type="checkbox"] {
+        width: 1.2rem;
+        height: 1.2rem;
+        cursor: pointer;
+        accent-color: #ec4899;
+      }
     </style>
   </head>
   <body class="transition-colors duration-300 font-anime overflow-hidden text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-950">
