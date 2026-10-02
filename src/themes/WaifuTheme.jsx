@@ -12,7 +12,14 @@ export default function WaifuTheme({
   const [openWindows, setOpenWindows] = useState([]);
   
   // Keep track of size and position preferences so they persist when minimized
-  const [windowPrefs, setWindowPrefs] = useState({});
+  const [windowPrefs, setWindowPrefs] = useState(() => {
+    try {
+      const stored = localStorage.getItem('waifu_window_prefs');
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  });
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [bgUrl, setBgUrl] = useState(() => localStorage.getItem('waifu_bg') || '/bg.png');
@@ -22,6 +29,10 @@ export default function WaifuTheme({
   useEffect(() => {
     localStorage.setItem('waifu_bg', bgUrl);
   }, [bgUrl]);
+
+  useEffect(() => {
+    localStorage.setItem('waifu_window_prefs', JSON.stringify(windowPrefs));
+  }, [windowPrefs]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -196,7 +207,7 @@ export default function WaifuTheme({
             <Volume2 className="w-4 h-4" />
             <BatteryMedium className="w-4 h-4" />
           </div>
-          <div className="text-xs font-mono font-medium text-gray-800 dark:text-gray-300 px-2 flex flex-col items-end leading-[1.2] justify-center">
+          <div className="text-xs font-mono font-medium text-gray-800 dark:text-gray-300 px-2 flex flex-col items-center leading-[1.2] justify-center">
             <span>{currentTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
             <span className="text-[10px] opacity-70">{currentTime.toLocaleDateString('en-GB')}</span>
           </div>
