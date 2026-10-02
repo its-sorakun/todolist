@@ -416,7 +416,7 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
           />
         </div>
         <div className="flex items-center no-drag px-2">
-          <button onClick={() => { deleteNote(note.id); closeWindow(); }} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200" title="Delete">
+          <button onClick={() => deleteNote(note.id)} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200" title="Delete">
              <Trash2 className="w-4 h-4" />
           </button>
           <button onClick={() => closeWindow()} className="w-10 h-10 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200" title="Minimize">
