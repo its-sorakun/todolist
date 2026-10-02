@@ -27,7 +27,11 @@ export default function App() {
   });
 
   const [activeNoteId, setActiveNoteId] = useState(() => notes[0]?.id);
-  const [theme, setTheme] = useState(() => localStorage.getItem('app_theme') || 'aesthetic');
+  const [theme, setTheme] = useState(() => {
+    let saved = localStorage.getItem('app_theme');
+    if (saved === 'waifu') saved = 'notesos';
+    return saved || 'aesthetic';
+  });
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('todo_theme');
     if (saved) return saved === 'dark';

@@ -324,7 +324,7 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
   return (
     <div 
       onPointerDownCapture={onFocus}
-      className={`absolute flex flex-col bg-white/50 dark:bg-[#1a1a2e]/70 backdrop-blur-3xl border border-white/60 dark:border-white/10 overflow-hidden shadow-2xl transition-all duration-200 ${
+      className={`absolute flex flex-col bg-white/50 dark:bg-[#1a1a2e]/70 backdrop-blur-3xl border border-white/60 dark:border-white/10 overflow-hidden shadow-2xl transition-shadow duration-200 ${
         isActive ? 'z-40 ring-1 ring-pink-400/50 shadow-[0_20px_50px_rgba(255,126,179,0.3)]' : 'z-30 hover:z-30 opacity-95'
       } ${isMaximized ? 'rounded-none border-0' : 'rounded-2xl'}`}
       style={
