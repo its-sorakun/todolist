@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium, Image as ImageIcon } from 'lucide-react';
+import { getModalClasses } from '../utils/themeConfig';
 import RichTextEditor from '../components/RichTextEditor';
 
 export default function WaifuTheme({
@@ -12,6 +13,16 @@ export default function WaifuTheme({
   
   // Keep track of size and position preferences so they persist when minimized
   const [windowPrefs, setWindowPrefs] = useState({});
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [bgUrl, setBgUrl] = useState('/bg.png');
+  const [showBgPrompt, setShowBgPrompt] = useState(false);
+  const [tempBgUrl, setTempBgUrl] = useState('');
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Automatically open the active note if it's not already open
   useEffect(() => {
@@ -51,8 +62,8 @@ export default function WaifuTheme({
       {/* Background Image Setup */}
       <style>{`
         body {
-          background-color: #1a1a2e;
-          background-image: url("/bg.png");
+          background-color: ${darkMode ? '#1a1a2e' : '#f5f5f5'};
+          background-image: url("${bgUrl}");
           background-size: cover;
           background-position: center;
           background-attachment: fixed;
@@ -82,22 +93,49 @@ export default function WaifuTheme({
       </div>
 
       {/* KDE Plasma Style Bottom Panel */}
-      <div className="absolute bottom-0 left-0 w-full h-12 bg-[#1a1a2e]/90 dark:bg-[#0a0a14]/95 backdrop-blur-3xl border-t border-white/10 z-50 flex items-center justify-between px-2 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+      <div className="absolute bottom-0 left-0 w-full h-12 bg-white/80 dark:bg-[#0a0a14]/95 backdrop-blur-3xl border-t border-black/10 dark:border-white/10 z-[60] flex items-center justify-between px-2 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
         
         {/* Left: Application Launcher & Add Note */}
         <div className="flex items-center h-full gap-1">
-          <button 
-            className="h-10 px-3 flex items-center justify-center gap-2 rounded hover:bg-white/10 transition-colors text-white group"
-            title="Application Launcher"
-          >
-            <Terminal className="w-5 h-5 text-pink-400 group-hover:text-pink-300" />
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="h-10 px-3 flex items-center justify-center gap-2 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black dark:text-white group"
+              title="Application Launcher"
+            >
+              <Terminal className="w-5 h-5 text-pink-500 dark:text-pink-400 group-hover:text-pink-600 dark:group-hover:text-pink-300" />
+            </button>
+            
+            {/* Start Menu Popover */}
+            {isMenuOpen && (
+              <div className="absolute bottom-12 left-0 mb-2 w-64 bg-white/90 dark:bg-[#1a1a2e]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-xl shadow-2xl p-2 flex flex-col gap-1 z-[70] animate-in fade-in slide-in-from-bottom-2">
+                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-black/5 dark:border-white/10 mb-1">
+                  System Menu
+                </div>
+                <button 
+                  onClick={() => { setDarkMode(!darkMode); setIsMenuOpen(false); }} 
+                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200 font-medium"
+                >
+                  {darkMode ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-blue-600" />}
+                  Toggle {darkMode ? 'Light' : 'Dark'} Mode
+                </button>
+                <button 
+                  onClick={() => { setShowBgPrompt(true); setIsMenuOpen(false); }} 
+                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200 font-medium"
+                >
+                  <ImageIcon className="w-5 h-5 text-purple-500" />
+                  Change Background
+                </button>
+              </div>
+            )}
+          </div>
+
           <button 
             onClick={addNote} 
-            className="h-10 px-3 flex items-center justify-center rounded hover:bg-white/10 transition-colors text-gray-300 hover:text-white"
+            className="h-10 px-3 flex items-center justify-center rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
             title="Create New File"
           >
-            <Plus className="w-5 h-5 text-green-400" />
+            <Plus className="w-5 h-5 text-green-600 dark:text-green-400" />
           </button>
         </div>
 
@@ -110,10 +148,10 @@ export default function WaifuTheme({
               title={note.title || "Untitled"}
               className={`h-10 px-4 flex items-center max-w-[200px] rounded transition-all duration-200 border-b-2 ${
                 activeNoteId === note.id 
-                  ? 'bg-white/10 border-pink-400 text-white shadow-inner shadow-white/5' 
+                  ? 'bg-black/5 dark:bg-white/10 border-pink-500 dark:border-pink-400 text-black dark:text-white shadow-inner shadow-black/5 dark:shadow-white/5' 
                   : openWindows.includes(note.id)
-                    ? 'bg-white/5 border-white/20 hover:bg-white/10 text-gray-300'
-                    : 'border-transparent hover:bg-white/5 text-gray-500 hover:text-gray-300'
+                    ? 'bg-black/5 dark:bg-white/5 border-black/20 dark:border-white/20 hover:bg-black/10 dark:hover:bg-white/10 text-gray-800 dark:text-gray-300'
+                    : 'border-transparent hover:bg-black/5 dark:hover:bg-white/5 text-gray-600 dark:text-gray-500 hover:text-black dark:hover:text-gray-300'
               }`}
             >
               <span className="truncate text-sm font-medium tracking-wide">
@@ -124,21 +162,50 @@ export default function WaifuTheme({
         </div>
         
         {/* Right: System Tray */}
-        <div className="flex items-center h-full gap-2 px-2 text-gray-400">
-          <button onClick={() => setDarkMode(!darkMode)} className="h-10 w-10 flex items-center justify-center rounded hover:bg-white/10 transition-colors text-gray-300 hover:text-white">
-            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
+        <div className="flex items-center h-full gap-2 px-2 text-gray-600 dark:text-gray-400">
           <div className="flex items-center gap-3 px-2">
             <Wifi className="w-4 h-4" />
             <Volume2 className="w-4 h-4" />
             <BatteryMedium className="w-4 h-4" />
           </div>
-          <div className="text-xs font-mono font-medium text-gray-300 px-2 flex flex-col items-end leading-none justify-center">
-            <span>{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            <span className="text-[10px] text-gray-500">{new Date().toLocaleDateString()}</span>
+          <div className="text-xs font-mono font-medium text-gray-800 dark:text-gray-300 px-2 flex flex-col items-end leading-none justify-center">
+            <span>{currentTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            <span className="text-[10px] text-gray-500">{currentTime.toLocaleDateString()}</span>
           </div>
         </div>
       </div>
+
+      {/* Change Background Modal */}
+      {showBgPrompt && (
+        <div className={`fixed inset-0 z-[100] flex items-center justify-center animate-in fade-in duration-200 ${getModalClasses(theme).overlay}`}>
+          <div className={`m-4 max-w-sm w-full transform transition-all scale-in-100 ${getModalClasses(theme).container}`}>
+            <h2 className={`${getModalClasses(theme).title}`}>Change Background</h2>
+            <p className={`${getModalClasses(theme).text}`}>Enter a direct URL to an image to set it as your wallpaper.</p>
+            <input 
+              type="text" 
+              value={tempBgUrl}
+              onChange={(e) => setTempBgUrl(e.target.value)}
+              className={`${getModalClasses(theme).input}`}
+              placeholder="https://example.com/waifu.jpg"
+              autoFocus
+            />
+            <div className="flex justify-end gap-2">
+              <button 
+                onClick={() => { setShowBgPrompt(false); setTempBgUrl(''); }}
+                className={`${getModalClasses(theme).buttonSecondary}`}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => { setBgUrl(tempBgUrl || '/bg.png'); setShowBgPrompt(false); setTempBgUrl(''); }}
+                className={`${getModalClasses(theme).buttonPrimary}`}
+              >
+                Set Background
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
