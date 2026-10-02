@@ -27,7 +27,12 @@ export default function NotesOSTheme({
   const [tempBgUrl, setTempBgUrl] = useState('');
 
   useEffect(() => {
-    localStorage.setItem('waifu_bg', bgUrl);
+    try {
+      localStorage.setItem('waifu_bg', bgUrl);
+    } catch (e) {
+      console.warn("Could not save background to localStorage, it might be too large.", e);
+      alert("Note: This image is too large to save permanently (browser storage limit). It will work for this session but will reset when you refresh.");
+    }
   }, [bgUrl]);
 
   useEffect(() => {
@@ -220,14 +225,41 @@ export default function NotesOSTheme({
           <div className={`m-4 max-w-sm w-full transform transition-all scale-in-100 ${getModalClasses(theme).container}`}>
             <h2 className={`${getModalClasses(theme).title}`}>Change Background</h2>
             <p className={`${getModalClasses(theme).text}`}>Enter a direct URL to an image to set it as your wallpaper.</p>
-            <input 
-              type="text" 
-              value={tempBgUrl}
-              onChange={(e) => setTempBgUrl(e.target.value)}
-              className={`${getModalClasses(theme).input}`}
-              placeholder="https://example.com/wallpaper.jpg"
-              autoFocus
-            />
+            <div className="flex flex-col gap-4 mb-4 mt-2">
+              <input 
+                type="text" 
+                value={tempBgUrl}
+                onChange={(e) => setTempBgUrl(e.target.value)}
+                className={`${getModalClasses(theme).input} !mb-0`}
+                placeholder="https://example.com/wallpaper.jpg"
+                autoFocus
+              />
+              <div className="flex items-center gap-2">
+                <div className="h-px bg-gray-500/30 flex-1"></div>
+                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">OR</span>
+                <div className="h-px bg-gray-500/30 flex-1"></div>
+              </div>
+              <label className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white/40 dark:bg-black/40 border-2 border-dashed border-gray-400/50 hover:border-pink-400/50 hover:bg-white/60 dark:hover:bg-black/60 rounded-xl cursor-pointer transition-colors text-sm font-bold text-gray-700 dark:text-gray-300">
+                <ImageIcon className="w-4 h-4" />
+                Upload Local Image
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (e) => {
+                        setBgUrl(e.target.result);
+                        setShowBgPrompt(false);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }} 
+                />
+              </label>
+            </div>
             <div className="flex justify-end gap-2">
               <button 
                 onClick={() => { setShowBgPrompt(false); setTempBgUrl(''); }}
@@ -344,13 +376,15 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
         <div className="flex items-center gap-2 px-4 no-drag">
            {/* We can put a small icon here if we want, or just leave it empty for windows style */}
         </div>
-        <input 
-          type="text"
-          value={note.title}
-          onChange={(e) => updateActiveNote({ title: e.target.value })}
-          className="font-bold text-gray-800 dark:text-gray-200 text-sm tracking-wide bg-transparent outline-none truncate flex-1 text-left pl-2 no-drag"
-          placeholder="Untitled Note"
-        />
+        <div className="flex-1 flex items-center pl-2 h-full pointer-events-none">
+          <input 
+            type="text"
+            value={note.title}
+            onChange={(e) => updateActiveNote({ title: e.target.value })}
+            className="font-bold text-gray-800 dark:text-gray-200 text-sm tracking-wide bg-transparent outline-none truncate text-left pointer-events-auto no-drag w-full max-w-[250px] focus:bg-white/30 dark:focus:bg-black/30 rounded px-1 transition-colors"
+            placeholder="Untitled Note"
+          />
+        </div>
         <div className="flex items-center no-drag px-2">
           <button onClick={() => { deleteNote(note.id); closeWindow(); }} className="w-10 h-10 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-gray-800 dark:text-gray-200" title="Delete">
              <Trash2 className="w-4 h-4" />
