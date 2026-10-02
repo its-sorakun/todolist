@@ -296,7 +296,7 @@ export default function RichTextEditor({ content, onChange, editable = true, the
           <button onClick={toggleMarkdownMode} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isMarkdownMode ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}`} title="Toggle Markdown View"><FileCode2 size={18} /></button>
         </div>
       )}
-      <div className="flex-grow overflow-y-auto custom-scrollbar p-2">
+      <div className={`flex-grow p-2 ${editable ? 'overflow-y-auto custom-scrollbar' : 'overflow-hidden pointer-events-none mask-bottom'}`}>
         {isMarkdownMode ? (
           <textarea
             value={markdownText}

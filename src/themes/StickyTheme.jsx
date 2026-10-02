@@ -56,7 +56,7 @@ function StickyNote({
 
   return (
     <div 
-      className={`relative w-80 min-h-[300px] ${color} shadow-[0_10px_30px_rgba(0,0,0,0.3)] p-6 transition-all duration-300 flex flex-col ${isActive ? 'scale-110 z-20 shadow-[0_20px_50px_rgba(0,0,0,0.4)] w-[400px] min-h-[400px]' : 'hover:scale-105 z-10'}`}
+      className={`relative w-80 h-[350px] ${color} shadow-[0_10px_30px_rgba(0,0,0,0.3)] p-6 transition-all duration-300 flex flex-col ${isActive ? 'scale-110 z-20 shadow-[0_20px_50px_rgba(0,0,0,0.4)] w-[450px] h-[550px]' : 'hover:scale-105 z-10'}`}
       style={{ transform: isActive ? `rotate(0deg)` : `rotate(${rotation}deg)` }}
       onClick={onFocus}
     >
