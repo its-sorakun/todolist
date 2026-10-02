@@ -323,32 +323,62 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
     }
   };
 
-  const handleResizeDown = (e) => {
+  const handleResizeDown = (e, corner) => {
     e.stopPropagation();
     e.preventDefault();
     resizeRef.current = {
       startX: e.clientX,
       startY: e.clientY,
       initW: size.width,
-      initH: size.height
+      initH: size.height,
+      initX: position.x,
+      initY: position.y,
+      corner
     };
     e.target.setPointerCapture(e.pointerId);
   };
 
   const handleResizeMove = (e) => {
     if (!resizeRef.current || isMaximized) return;
-    const dw = e.clientX - resizeRef.current.startX;
-    const dh = e.clientY - resizeRef.current.startY;
-    setSize({
-      width: Math.max(400, resizeRef.current.initW + dw),
-      height: Math.max(300, resizeRef.current.initH + dh)
-    });
+    const { startX, startY, initW, initH, initX, initY, corner } = resizeRef.current;
+    const dw = e.clientX - startX;
+    const dh = e.clientY - startY;
+
+    let newW = initW;
+    let newH = initH;
+    let newX = initX;
+    let newY = initY;
+
+    if (corner.includes('e')) newW = Math.max(400, initW + dw);
+    if (corner.includes('s')) newH = Math.max(300, initH + dh);
+    if (corner.includes('w')) {
+      newW = Math.max(400, initW - dw);
+      if (initW - dw >= 400) newX = initX + dw;
+    }
+    if (corner.includes('n')) {
+      newH = Math.max(300, initH - dh);
+      if (initH - dh >= 300) newY = initY + dh;
+    }
+
+    setSize({ width: newW, height: newH });
+    setPosition({ x: newX, y: newY });
+    
+    resizeRef.current.currentW = newW;
+    resizeRef.current.currentH = newH;
+    resizeRef.current.currentX = newX;
+    resizeRef.current.currentY = newY;
   };
 
   const handleResizeUp = (e) => {
     if (resizeRef.current) {
       e.target.releasePointerCapture(e.pointerId);
-      onSavePrefs({ x: position.x, y: position.y, width: size.width, height: size.height });
+      const r = resizeRef.current;
+      onSavePrefs({ 
+        x: r.currentX ?? position.x, 
+        y: r.currentY ?? position.y, 
+        width: r.currentW ?? size.width, 
+        height: r.currentH ?? size.height 
+      });
       resizeRef.current = null;
     }
   };
@@ -412,14 +442,34 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
         </div>
       </div>
 
-      {/* Resize Handle */}
+      {/* Resize Handles */}
       {!isMaximized && (
-        <div 
-          className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize z-50 no-drag"
-          onPointerDown={handleResizeDown}
-          onPointerMove={handleResizeMove}
-          onPointerUp={handleResizeUp}
-        />
+        <>
+          <div 
+            className="absolute top-0 left-0 w-4 h-4 cursor-nw-resize z-50 no-drag"
+            onPointerDown={(e) => handleResizeDown(e, 'nw')}
+            onPointerMove={handleResizeMove}
+            onPointerUp={handleResizeUp}
+          />
+          <div 
+            className="absolute top-0 right-0 w-4 h-4 cursor-ne-resize z-50 no-drag"
+            onPointerDown={(e) => handleResizeDown(e, 'ne')}
+            onPointerMove={handleResizeMove}
+            onPointerUp={handleResizeUp}
+          />
+          <div 
+            className="absolute bottom-0 left-0 w-4 h-4 cursor-sw-resize z-50 no-drag"
+            onPointerDown={(e) => handleResizeDown(e, 'sw')}
+            onPointerMove={handleResizeMove}
+            onPointerUp={handleResizeUp}
+          />
+          <div 
+            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-50 no-drag"
+            onPointerDown={(e) => handleResizeDown(e, 'se')}
+            onPointerMove={handleResizeMove}
+            onPointerUp={handleResizeUp}
+          />
+        </>
       )}
     </div>
   );
