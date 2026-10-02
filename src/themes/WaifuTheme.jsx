@@ -9,6 +9,9 @@ export default function WaifuTheme({
 }) {
   // Keep track of which windows are open on the desktop
   const [openWindows, setOpenWindows] = useState([]);
+  
+  // Keep track of size and position preferences so they persist when minimized
+  const [windowPrefs, setWindowPrefs] = useState({});
 
   // Automatically open the active note if it's not already open
   useEffect(() => {
@@ -71,6 +74,8 @@ export default function WaifuTheme({
                deleteNote={deleteNote}
                closeWindow={() => closeWindow(note.id)}
                theme={theme}
+               prefs={windowPrefs[note.id] || {}}
+               onSavePrefs={(prefs) => setWindowPrefs(prev => ({ ...prev, [note.id]: prefs }))}
              />
            );
          })}
@@ -112,15 +117,18 @@ export default function WaifuTheme({
   );
 }
 
-function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote, closeWindow, theme }) {
-  // Stagger initial positions slightly
+function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote, closeWindow, theme, prefs, onSavePrefs }) {
   const [position, setPosition] = useState({ 
-    x: Math.random() * 100 + 50, 
-    y: Math.random() * 50 + 50 
+    x: prefs.x !== undefined ? prefs.x : Math.random() * 100 + 50, 
+    y: prefs.y !== undefined ? prefs.y : Math.random() * 50 + 50 
   });
-  const [size, setSize] = useState({ width: 700, height: 550 });
+  const [size, setSize] = useState({ 
+    width: prefs.width !== undefined ? prefs.width : 700, 
+    height: prefs.height !== undefined ? prefs.height : 550 
+  });
   const [isMaximized, setIsMaximized] = useState(false);
   const dragRef = useRef(null);
+  const resizeRef = useRef(null);
 
   const handlePointerDown = (e) => {
     if (e.target.closest('.no-drag')) return;
@@ -146,7 +154,38 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
   const handlePointerUp = (e) => {
     if (dragRef.current) {
       e.target.releasePointerCapture(e.pointerId);
+      onSavePrefs({ x: position.x, y: position.y, width: size.width, height: size.height });
       dragRef.current = null;
+    }
+  };
+
+  const handleResizeDown = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    resizeRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      initW: size.width,
+      initH: size.height
+    };
+    e.target.setPointerCapture(e.pointerId);
+  };
+
+  const handleResizeMove = (e) => {
+    if (!resizeRef.current || isMaximized) return;
+    const dw = e.clientX - resizeRef.current.startX;
+    const dh = e.clientY - resizeRef.current.startY;
+    setSize({
+      width: Math.max(400, resizeRef.current.initW + dw),
+      height: Math.max(300, resizeRef.current.initH + dh)
+    });
+  };
+
+  const handleResizeUp = (e) => {
+    if (resizeRef.current) {
+      e.target.releasePointerCapture(e.pointerId);
+      onSavePrefs({ x: position.x, y: position.y, width: size.width, height: size.height });
+      resizeRef.current = null;
     }
   };
 
@@ -211,6 +250,16 @@ function DraggableWindow({ note, isActive, onFocus, updateActiveNote, deleteNote
            </button>
         </div>
       </div>
+
+      {/* Resize Handle */}
+      {!isMaximized && (
+        <div 
+          className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize z-50 no-drag"
+          onPointerDown={handleResizeDown}
+          onPointerMove={handleResizeMove}
+          onPointerUp={handleResizeUp}
+        />
+      )}
     </div>
   );
 }
