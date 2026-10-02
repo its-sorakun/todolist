@@ -12,14 +12,42 @@ import { marked } from 'marked'
 import TurndownService from 'turndown'
 import { gfm } from 'turndown-plugin-gfm'
 
-// Configure Turndown to preserve tables and images as HTML
+import { Mark, mergeAttributes } from '@tiptap/core'
+
+// Configure Turndown to preserve tables, images, and styled spans as HTML
 const turndownService = new TurndownService({
   headingStyle: 'atx',
   bulletListMarker: '-',
   codeBlockStyle: 'fenced'
 })
 turndownService.use(gfm)
-turndownService.keep(['table', 'tr', 'td', 'th', 'tbody', 'thead', 'img', 'hr'])
+turndownService.keep(['table', 'tr', 'td', 'th', 'tbody', 'thead', 'img', 'hr', 'span'])
+
+// Create a custom FontSize Mark extension
+const FontSize = Mark.create({
+  name: 'fontSize',
+  addOptions() { return { types: ['textStyle'] } },
+  addAttributes() {
+    return {
+      size: {
+        default: null,
+        parseHTML: element => element.style.fontSize.replace(/['"]+/g, ''),
+        renderHTML: attributes => {
+          if (!attributes.size) return {}
+          return { style: `font-size: ${attributes.size}` }
+        },
+      },
+    }
+  },
+  parseHTML() { return [{ tag: 'span[style*=font-size]' }] },
+  renderHTML({ HTMLAttributes }) { return ['span', mergeAttributes(HTMLAttributes), 0] },
+  addCommands() {
+    return {
+      setFontSize: size => ({ chain }) => chain().setMark('fontSize', { size }).run(),
+      unsetFontSize: () => ({ chain }) => chain().unsetMark('fontSize').run(),
+    }
+  },
+})
 
 // Extend Image to support width and height attributes
 const ResizableImage = Image.extend({
@@ -31,7 +59,6 @@ const ResizableImage = Image.extend({
         parseHTML: element => {
           let src = element.getAttribute('src');
           // Fix AI hallucinations where it inserts markdown links inside src="..."
-          // e.g. src="[https://url.com](https://url.com)"
           if (src && src.startsWith('[') && src.includes('](')) {
             const match = src.match(/\]\((.*?)\)/);
             if (match) src = match[1];
@@ -112,6 +139,7 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
     extensions: [
       StarterKit,
       ResizableImage,
+      FontSize,
       Table.configure({ resizable: true }),
       TableRow,
       TableHeader,
@@ -166,6 +194,20 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
     }
   };
 
+  const handleIncreaseFontSize = () => {
+    const currentSize = editor.getAttributes('fontSize').size || '18px';
+    const currentPx = parseInt(currentSize, 10);
+    const newSize = `${currentPx + 2}px`;
+    editor.chain().focus().setFontSize(newSize).run();
+  };
+
+  const handleDecreaseFontSize = () => {
+    const currentSize = editor.getAttributes('fontSize').size || '18px';
+    const currentPx = parseInt(currentSize, 10);
+    const newSize = `${Math.max(10, currentPx - 2)}px`;
+    editor.chain().focus().setFontSize(newSize).run();
+  };
+
   return (
     <div className="flex flex-col h-full w-full">
       {editable && (
@@ -175,6 +217,9 @@ export default function RichTextEditor({ content, onChange, editable = true }) {
               <button onClick={() => editor.chain().focus().toggleBold().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bold') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bold"><Bold size={18} /></button>
               <button onClick={() => editor.chain().focus().toggleItalic().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('italic') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Italic"><Italic size={18} /></button>
               <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Heading"><Heading2 size={18} /></button>
+              <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
+              <button onClick={handleDecreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Decrease Font Size">A-</button>
+              <button onClick={handleIncreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Increase Font Size">A+</button>
               <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
               <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bulletList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bullet List"><List size={18} /></button>
               <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('orderedList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Numbered List"><ListOrdered size={18} /></button>
