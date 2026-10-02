@@ -87,7 +87,7 @@ export default function RetroTheme({
                       <button onClick={() => {setTheme('aesthetic'); setShowThemeSelector(false)}} className="text-left px-3 py-2 bg-pink-400 text-white brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 rounded-lg font-bold">MD3</button>
                       <button onClick={() => {setTheme('sticky'); setShowThemeSelector(false)}} className="text-left px-3 py-2 bg-orange-400 text-white brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 rounded-lg font-bold">Corkboard</button>
                       <button onClick={() => {setTheme('retro'); setShowThemeSelector(false)}} className="text-left px-3 py-2 bg-yellow-400 text-black brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 rounded-lg font-bold">Retro</button>
-                      <button onClick={() => {setTheme('waifu'); setShowThemeSelector(false)}} className="text-left px-3 py-2 bg-purple-400 text-white brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 rounded-lg font-bold">Waifu</button>
+                      <button onClick={() => {setTheme('notesos'); setShowThemeSelector(false)}} className="text-left px-3 py-2 bg-purple-400 text-white brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 rounded-lg font-bold">NotesOS</button>
                     </div>
                   )}
                 </div>

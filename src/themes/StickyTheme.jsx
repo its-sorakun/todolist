@@ -28,7 +28,7 @@ export default function StickyTheme({
           <Plus strokeWidth={3} /> New Sticky
         </button>
         <div className="flex gap-2">
-          {['aesthetic', 'sticky', 'retro', 'waifu'].map((t) => (
+          {['aesthetic', 'sticky', 'retro', 'notesos'].map((t) => (
             <button 
               key={t}
               onClick={() => setTheme(t)}
@@ -36,7 +36,7 @@ export default function StickyTheme({
                 theme === t ? 'bg-[#ff9e9e] text-red-900' : 'bg-[#eecbad] text-orange-900'
               }`}
             >
-              {t === 'aesthetic' ? 'MD3' : t === 'sticky' ? 'Cork' : t === 'retro' ? 'Retro' : 'Waifu'}
+              {t === 'aesthetic' ? 'MD3' : t === 'sticky' ? 'Cork' : t === 'retro' ? 'Retro' : 'NotesOS'}
             </button>
           ))}
         </div>

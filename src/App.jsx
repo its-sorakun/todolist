@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import AestheticTheme from './themes/AestheticTheme';
 import RetroTheme from './themes/RetroTheme';
-import WaifuTheme from './themes/WaifuTheme';
+import NotesOSTheme from './themes/NotesOSTheme';
 import StickyTheme from './themes/StickyTheme';
 import { Settings2 } from 'lucide-react';
 import { getModalClasses } from './utils/themeConfig';
@@ -112,7 +112,7 @@ export default function App() {
     <>
       {theme === 'aesthetic' && <AestheticTheme {...themeProps} />}
       {theme === 'retro' && <RetroTheme {...themeProps} />}
-      {theme === 'waifu' && <WaifuTheme {...themeProps} />}
+      {theme === 'notesos' && <NotesOSTheme {...themeProps} />}
       {theme === 'sticky' && <StickyTheme {...themeProps} />}
 
       {/* Delete Confirmation Modal */}

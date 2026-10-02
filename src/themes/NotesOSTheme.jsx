@@ -3,7 +3,7 @@ import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2,
 import { getModalClasses } from '../utils/themeConfig';
 import RichTextEditor from '../components/RichTextEditor';
 
-export default function WaifuTheme({
+export default function NotesOSTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode, theme, setTheme
@@ -225,7 +225,7 @@ export default function WaifuTheme({
               value={tempBgUrl}
               onChange={(e) => setTempBgUrl(e.target.value)}
               className={`${getModalClasses(theme).input}`}
-              placeholder="https://example.com/waifu.jpg"
+              placeholder="https://example.com/wallpaper.jpg"
               autoFocus
             />
             <div className="flex justify-end gap-2">

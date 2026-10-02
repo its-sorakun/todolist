@@ -20,7 +20,7 @@ export const getModalClasses = (theme) => {
         buttonSubmit: 'px-6 py-2 font-bold text-2xl bg-red-400 hover:bg-red-500 text-white rounded shadow-md transition-colors',
         input: 'w-full bg-transparent border-b-2 border-black/20 p-2 outline-none text-2xl placeholder-black/40 mb-4'
       };
-    case 'waifu':
+    case 'notesos':
       return {
         overlay: 'bg-black/20 backdrop-blur-md',
         container: 'bg-white/60 dark:bg-black/60 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(255,126,179,0.37)] border border-white/40 dark:border-white/10 rounded-3xl p-8 font-anime',
