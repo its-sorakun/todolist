@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2 } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium } from 'lucide-react';
 import RichTextEditor from '../components/RichTextEditor';
 
 export default function WaifuTheme({
@@ -81,36 +81,62 @@ export default function WaifuTheme({
          })}
       </div>
 
-      {/* Glassy macOS-style Dock at the bottom */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-bottom-8 duration-500">
-        <div className="bg-white/20 dark:bg-black/40 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-[2rem] p-3 flex items-center gap-3 shadow-[0_8px_32px_0_rgba(255,126,179,0.4)]">
+      {/* KDE Plasma Style Bottom Panel */}
+      <div className="absolute bottom-0 left-0 w-full h-12 bg-[#1a1a2e]/90 dark:bg-[#0a0a14]/95 backdrop-blur-3xl border-t border-white/10 z-50 flex items-center justify-between px-2 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        
+        {/* Left: Application Launcher & Add Note */}
+        <div className="flex items-center h-full gap-1">
+          <button 
+            className="h-10 px-3 flex items-center justify-center gap-2 rounded hover:bg-white/10 transition-colors text-white group"
+            title="Application Launcher"
+          >
+            <Terminal className="w-5 h-5 text-pink-400 group-hover:text-pink-300" />
+          </button>
+          <button 
+            onClick={addNote} 
+            className="h-10 px-3 flex items-center justify-center rounded hover:bg-white/10 transition-colors text-gray-300 hover:text-white"
+            title="Create New File"
+          >
+            <Plus className="w-5 h-5 text-green-400" />
+          </button>
+        </div>
+
+        {/* Center: Task Manager (Windows) */}
+        <div className="flex-1 flex items-center h-full gap-1 px-4 overflow-x-hidden">
           {notes.map(note => (
             <button
               key={note.id}
               onClick={() => toggleWindow(note.id)}
               title={note.title || "Untitled"}
-              className={`relative px-5 py-2.5 rounded-2xl font-bold transition-all duration-300 max-w-[150px] truncate ${
+              className={`h-10 px-4 flex items-center max-w-[200px] rounded transition-all duration-200 border-b-2 ${
                 activeNoteId === note.id 
-                  ? 'bg-pink-400 text-white scale-110 shadow-lg shadow-pink-400/50 -translate-y-2' 
-                  : 'bg-white/40 dark:bg-black/40 hover:bg-white/60 dark:hover:bg-black/60 hover:-translate-y-1 text-gray-900 dark:text-gray-100'
+                  ? 'bg-white/10 border-pink-400 text-white shadow-inner shadow-white/5' 
+                  : openWindows.includes(note.id)
+                    ? 'bg-white/5 border-white/20 hover:bg-white/10 text-gray-300'
+                    : 'border-transparent hover:bg-white/5 text-gray-500 hover:text-gray-300'
               }`}
             >
-              {note.title || "Untitled"}
-              {openWindows.includes(note.id) && (
-                <div className={`absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full ${activeNoteId === note.id ? 'bg-white' : 'bg-pink-500'}`}></div>
-              )}
+              <span className="truncate text-sm font-medium tracking-wide">
+                {note.title || "Untitled"}
+              </span>
             </button>
           ))}
-          
-          <div className="w-px h-10 bg-black/10 dark:bg-white/20 mx-1 rounded-full"></div>
-          
-          <button onClick={addNote} className="p-3 rounded-2xl bg-white/40 dark:bg-black/40 hover:bg-pink-400 hover:text-white hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-400/50 transition-all text-gray-900 dark:text-white">
-            <Plus className="w-6 h-6" />
+        </div>
+        
+        {/* Right: System Tray */}
+        <div className="flex items-center h-full gap-2 px-2 text-gray-400">
+          <button onClick={() => setDarkMode(!darkMode)} className="h-10 w-10 flex items-center justify-center rounded hover:bg-white/10 transition-colors text-gray-300 hover:text-white">
+            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
-          
-          <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-2xl bg-white/40 dark:bg-black/40 hover:bg-white/60 dark:hover:bg-black/60 hover:-translate-y-1 transition-all text-gray-900 dark:text-white">
-            {darkMode ? <Sun className="w-6 h-6 text-yellow-300 drop-shadow-md" /> : <Moon className="w-6 h-6 text-blue-700 drop-shadow-md" />}
-          </button>
+          <div className="flex items-center gap-3 px-2">
+            <Wifi className="w-4 h-4" />
+            <Volume2 className="w-4 h-4" />
+            <BatteryMedium className="w-4 h-4" />
+          </div>
+          <div className="text-xs font-mono font-medium text-gray-300 px-2 flex flex-col items-end leading-none justify-center">
+            <span>{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            <span className="text-[10px] text-gray-500">{new Date().toLocaleDateString()}</span>
+          </div>
         </div>
       </div>
     </div>
