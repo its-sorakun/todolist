@@ -21,6 +21,64 @@ Instead of monolithic files, we use Express Routers to mount isolated middleware
 - `/api/v1/notes`: `noteRoutes.js` -> `noteController.js`
 - `/api/v1/apikeys`: `apiKeyRoutes.js` -> `apiKeyController.js`
 
+### Data Flow Diagram (DFD)
+Below is the Data Flow Diagram illustrating how external entities (the React Client and the external Assistant Kiko) interact with the system.
+
+```mermaid
+graph TD
+    %% Entities
+    Client[React Frontend]
+    Kiko[External Assistant Kiko]
+    
+    %% Processes
+    AuthAPI(Authentication API)
+    NotesAPI(Notes API)
+    KeyAPI(API Key Management)
+    
+    %% Data Stores
+    DB[(MongoDB)]
+    
+    %% Flow
+    Client -- "1. Login (Username + Password)" --> AuthAPI
+    AuthAPI -- "2. Verify & Issue HttpOnly Cookie" --> Client
+    
+    Client -- "3. Generate Key (Cookie Auth)" --> KeyAPI
+    KeyAPI -- "4. Store Raw Key" --> DB
+    KeyAPI -- "5. Return Raw Key" --> Client
+    Client -. "6. Give Raw Key" .-> Kiko
+    
+    Client -- "7. CRUD Notes (Cookie Auth)" --> NotesAPI
+    Kiko -- "8. CRUD Notes (X-API-Key Header)" --> NotesAPI
+    
+    NotesAPI -- "9. Verify Cookie OR Verify Raw Key" --> DB
+    NotesAPI -- "10. Read/Write Data" --> DB
+```
+
+### Directory Structure (Separation of Concerns)
+
+```text
+backend/
+├── config/
+│   └── db.js                 # MongoDB connection logic
+├── controllers/
+│   ├── authController.js     # Login/Register logic
+│   ├── apiKeyController.js   # Key generation and revocation logic
+│   └── noteController.js     # CRUD operations for notes
+├── middleware/
+│   └── authMiddleware.js     # JWT Cookie and API Key verification
+├── models/
+│   ├── User.js               # User schema (Username, Password hash)
+│   ├── ApiKey.js             # API Key schema (Raw Key, Name, User ref)
+│   └── Note.js               # Note schema (Content, User ref)
+├── routes/
+│   ├── authRoutes.js         # Routes to authController
+│   ├── apiKeyRoutes.js       # Routes to apiKeyController
+│   └── noteRoutes.js         # Routes to noteController
+├── .env                      # Secrets (JWT_SECRET, MONGO_URI)
+├── swagger.yaml              # OpenAPI Specification
+└── server.js                 # Express bootstrap and middleware mounting
+```
+
 ---
 
 ## 2. Authentication Mechanics
