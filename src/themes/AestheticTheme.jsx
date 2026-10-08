@@ -1,4 +1,4 @@
-import { Sun, Moon, Trash2, Plus, Sparkles, Settings2 } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Sparkles, Settings2, Key } from 'lucide-react';
 import { useState } from 'react';
 import RichTextEditor from '../components/RichTextEditor';
 
@@ -14,7 +14,7 @@ export default function AestheticTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode, theme, setTheme,
-  currentUser, handleLogout
+  currentUser, handleLogout, setShowApiKeys
 }) {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
@@ -50,6 +50,12 @@ export default function AestheticTheme({
             className="w-full text-left px-5 py-3 rounded-[24px] text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-[#2a2a2a] transition-colors shadow-sm"
           >
             📚 API Documentation
+          </button>
+          <button 
+            onClick={() => setShowApiKeys(true)}
+            className="w-full text-left px-5 py-3 rounded-[24px] text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-[#2a2a2a] transition-colors shadow-sm flex items-center gap-2"
+          >
+            <Key className="w-4 h-4" /> Manage API Keys
           </button>
         </div>
         
