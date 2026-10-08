@@ -20,7 +20,7 @@ const app = express();
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:5173', // Vite default port
+  origin: 'http://localhost:3001', // Your Vite port
   credentials: true // Allow cookies to be sent
 }));
 

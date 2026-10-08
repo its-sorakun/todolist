@@ -3,47 +3,63 @@ import AestheticTheme from './themes/AestheticTheme';
 import RetroTheme from './themes/RetroTheme';
 import NotesOSTheme from './themes/NotesOSTheme';
 import StickyTheme from './themes/StickyTheme';
-import { Settings2 } from 'lucide-react';
+import AuthScreen from './components/AuthScreen';
 import { getModalClasses } from './utils/themeConfig';
+import { api } from './api';
 
 export default function App() {
-  const [notes, setNotes] = useState(() => {
-    const savedNotes = localStorage.getItem('todo_notes');
-    if (savedNotes) {
-      let parsed = JSON.parse(savedNotes);
-      // Migration script: if notes have 'items' from old checklist structure, convert them to HTML 'content'
-      if (parsed.length > 0 && parsed[0].items !== undefined) {
-        parsed = parsed.map(note => {
-          let htmlContent = '';
-          if (note.items && note.items.length > 0) {
-            htmlContent = `<ul>${note.items.map(item => `<li><p>${item.completed ? `<s>${item.text}</s>` : item.text}</p></li>`).join('')}</ul>`;
-          }
-          return { id: note.id, title: note.title, content: htmlContent };
-        });
-      }
-      if (parsed.length > 0) return parsed;
-    }
-    return [{ id: Date.now(), title: "Main Notes", content: "" }];
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem('current_user');
+    return saved ? JSON.parse(saved) : null;
   });
 
-  const [activeNoteId, setActiveNoteId] = useState(() => notes[0]?.id);
+  const [notes, setNotes] = useState([]);
+  const [activeNoteId, setActiveNoteId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [theme, setTheme] = useState(() => {
     let saved = localStorage.getItem('app_theme');
     if (saved === 'waifu') saved = 'notesos';
     return saved || 'aesthetic';
   });
+
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('todo_theme');
     if (saved) return saved === 'dark';
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState(null);
 
+  // Listen for 401 Unauthorized events from our API wrapper
   useEffect(() => {
-    localStorage.setItem('todo_notes', JSON.stringify(notes));
-  }, [notes]);
+    const handleAuthError = () => setCurrentUser(null);
+    window.addEventListener('auth_error', handleAuthError);
+    return () => window.removeEventListener('auth_error', handleAuthError);
+  }, []);
 
+  // Fetch Notes on login
+  useEffect(() => {
+    if (!currentUser) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    api.getNotes()
+      .then(fetchedNotes => {
+        // Map _id to id for our UI components
+        const mapped = fetchedNotes.map(n => ({ ...n, id: n._id }));
+        setNotes(mapped);
+        if (mapped.length > 0 && !activeNoteId) {
+          setActiveNoteId(mapped[0].id);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  }, [currentUser]);
+
+  // Handle Focus
   useEffect(() => {
     if (activeNoteId && !notes.find(n => n.id === activeNoteId) && notes.length > 0) {
       if (theme === 'notesos') {
@@ -54,6 +70,7 @@ export default function App() {
     }
   }, [notes, activeNoteId, theme]);
 
+  // Handle Theme Saves
   useEffect(() => {
     localStorage.setItem('todo_theme', darkMode ? 'dark' : 'light');
     if (darkMode) {
@@ -67,25 +84,42 @@ export default function App() {
     localStorage.setItem('app_theme', theme);
   }, [theme]);
 
-  const activeNote = notes.find(n => n.id === activeNoteId) || notes[0];
-
-  const updateActiveNote = (updates) => {
+  // API Actions
+  const updateActiveNote = async (updates) => {
+    // Optimistic UI update
     setNotes(notes.map(note => 
       note.id === activeNoteId ? { ...note, ...updates } : note
     ));
+    
+    try {
+      await api.updateNote(activeNoteId, updates);
+    } catch (err) {
+      console.error('Failed to update note:', err);
+    }
   };
 
-  const addNote = () => {
-    const newNote = {
-      id: Date.now(),
-      title: "New Document",
-      content: ""
-    };
-    setNotes([...notes, newNote]);
-    setActiveNoteId(newNote.id);
+  const addNote = async () => {
+    try {
+      const newNoteData = { title: "New Document", content: "", theme: theme };
+      const savedNote = await api.createNote(newNoteData);
+      const mappedNote = { ...savedNote, id: savedNote._id };
+      
+      setNotes([...notes, mappedNote]);
+      setActiveNoteId(mappedNote.id);
+    } catch (err) {
+      console.error('Failed to create note:', err);
+    }
   };
 
-  const [noteToDelete, setNoteToDelete] = useState(null);
+  const executeDelete = async (id) => {
+    try {
+      await api.deleteNote(id);
+      setNotes(notes.filter(n => n.id !== id));
+      setNoteToDelete(null);
+    } catch (err) {
+      console.error('Failed to delete note:', err);
+    }
+  };
 
   const requestDeleteNote = (id) => {
     const note = notes.find(n => n.id === id);
@@ -99,14 +133,21 @@ export default function App() {
     }
   };
 
-  const executeDelete = (id) => {
-    if (notes.length === 1) {
-      setNotes([{ id: Date.now(), title: "Main Notes", content: "" }]);
-    } else {
-      setNotes(notes.filter(n => n.id !== id));
-    }
-    setNoteToDelete(null);
+  const handleLogin = (userData) => {
+    localStorage.setItem('current_user', JSON.stringify(userData));
+    setCurrentUser(userData);
   };
+
+  // Render Auth Screen if not logged in
+  if (!currentUser) {
+    return <AuthScreen onLogin={handleLogin} darkMode={darkMode} theme={theme} />;
+  }
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading secure workspace...</div>;
+  }
+
+  const activeNote = notes.find(n => n.id === activeNoteId) || notes[0];
 
   const themeProps = {
     notes, activeNoteId, setActiveNoteId, activeNote,
