@@ -4,6 +4,7 @@ import RetroTheme from './themes/RetroTheme';
 import NotesOSTheme from './themes/NotesOSTheme';
 import StickyTheme from './themes/StickyTheme';
 import AuthScreen from './components/AuthScreen';
+import ApiKeyManager from './components/ApiKeyManager';
 import { getModalClasses } from './utils/themeConfig';
 import { api } from './api';
 
@@ -16,6 +17,7 @@ export default function App() {
   const [notes, setNotes] = useState([]);
   const [activeNoteId, setActiveNoteId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showApiKeys, setShowApiKeys] = useState(false);
 
   const [theme, setTheme] = useState(() => {
     let saved = localStorage.getItem('app_theme');
@@ -164,7 +166,7 @@ export default function App() {
     notes, activeNoteId, setActiveNoteId, activeNote,
     addNote, deleteNote: requestDeleteNote, updateActiveNote,
     darkMode, setDarkMode, theme, setTheme,
-    currentUser, handleLogout
+    currentUser, handleLogout, setShowApiKeys
   };
 
   const modalClasses = getModalClasses(theme);
@@ -175,6 +177,8 @@ export default function App() {
       {theme === 'retro' && <RetroTheme {...themeProps} />}
       {theme === 'notesos' && <NotesOSTheme {...themeProps} />}
       {theme === 'sticky' && <StickyTheme {...themeProps} />}
+
+      {showApiKeys && <ApiKeyManager onClose={() => setShowApiKeys(false)} theme={theme} />}
 
       {/* Delete Confirmation Modal */}
       {noteToDelete && (
