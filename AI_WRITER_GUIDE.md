@@ -22,8 +22,8 @@ I will be pasting these notes directly into the raw Markdown editor of my custom
    - *Correct:* `<img src="https://example.com/image.jpg" width="400" />`
    - *Incorrect:* `![alt|400](url)` or `![alt](url =400x)`
 5. **Tables:** My application supports advanced HTML Tables. If you need to lay out content side-by-side (like an image next to text) or create a data grid, feel free to use standard `<table>`, `<tr>`, and `<td>` HTML elements directly in the markdown. You may use `width` and `valign` attributes on table cells. 
-6. **Supported Elements:** Stick to Headings, Paragraphs, Lists, Blockquotes, Bold, Italic, Inline Code, Images, and HTML Tables. Do not generate Checklists (`- [ ]`), as my current rendering engine optimizes for elegant prose rather than task components.
-7. **Output Format:** Output the raw markdown directly. Do not wrap your entire response in a general ` ```markdown ` codeblock, just write the text.
+6. **Supported Elements:** Stick to Headings, Paragraphs, Lists, Blockquotes, Bold, Italic, Inline Code, Images, HTML Tables, and **Checklists** (`- [ ]` or `- [x]`). The engine fully supports nested task lists!
+7. **Output Format:** Output the raw markdown directly. Do not wrap your entire response in a general ` ```markdown ` codeblock, just write the text. If you are a programmatic agent (like Kiko) sending this via JSON, remember to properly escape your double quotes (`\"`) and newlines (`\n`).
 
 **Task:**
 Generate a comprehensive set of notes on **[INSERT YOUR TOPIC HERE]**. Ensure it is structured beautifully, highly readable, and makes use of the supported features (like a table layout or sized images) if it enhances the content.
