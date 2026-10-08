@@ -10,7 +10,7 @@ const generateTokenAndSetCookie = (res, userId) => {
   res.cookie('jwt', token, {
     httpOnly: true,     // Prevents JS from accessing the token (XSS protection)
     secure: process.env.NODE_ENV === 'production', // HTTPS only in prod
-    sameSite: 'strict', // CSRF protection
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Lax for local dev cross-origin
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
 };
@@ -29,6 +29,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ _id: user._id, username: user.username });
   } catch (err) {
+    console.error('REGISTER ERROR:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -45,6 +46,7 @@ exports.login = async (req, res) => {
     generateTokenAndSetCookie(res, user._id);
     res.json({ _id: user._id, username: user.username });
   } catch (err) {
+    console.error('LOGIN ERROR:', err);
     res.status(500).json({ error: err.message });
   }
 };
