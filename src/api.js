@@ -1,4 +1,6 @@
-const API_URL = 'http://localhost:5000/api/v1';
+// Dynamically match the browser's hostname so cookies always belong to the same site.
+// Avoids the 127.0.0.1 vs localhost mismatch that causes SameSite cookie rejection.
+const API_URL = `http://${window.location.hostname}:5000/api/v1`;
 
 // We must include credentials so the browser sends the HttpOnly JWT cookie with every request
 const fetchAPI = async (endpoint, options = {}) => {
