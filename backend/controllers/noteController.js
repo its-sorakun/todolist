@@ -29,7 +29,7 @@ exports.updateNote = async (req, res) => {
     const note = await Note.findOneAndUpdate(
       { _id: req.params.id, user: req.user._id },
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
     if (!note) {
       return res.status(404).json({ error: 'Note not found or unauthorized' });
