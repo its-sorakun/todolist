@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const apiKeySchema = new mongoose.Schema({
-  keyHash: {
+  rawKey: {
     type: String,
     required: true,
     unique: true,
