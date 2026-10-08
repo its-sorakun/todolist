@@ -201,7 +201,8 @@ export default function RichTextEditor({ content, onChange, editable = true, the
         placeholder: 'Start typing here...',
       }),
     ],
-    content: content,
+    // If the content comes from API as raw markdown (no HTML tags like <p>), parse it using marked
+    content: (content && !content.includes('<p>') && !content.includes('<h')) ? marked.parse(content, { async: false }) : content,
     editable: editable,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
