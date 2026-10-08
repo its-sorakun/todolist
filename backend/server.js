@@ -19,17 +19,25 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
+const allowedOrigins = [
+  'http://localhost:5173', 'http://127.0.0.1:5173',
+  'http://localhost:3000', 'http://127.0.0.1:3000',
+  'http://localhost:3001', 'http://127.0.0.1:3001',
+  'http://localhost:3002', 'http://127.0.0.1:3002'
+];
+
 app.use(cors({
-  origin: 'http://localhost:3001', // Your Vite port
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true // Allow cookies to be sent
 }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use('/api/', limiter);
+// Rate limiting disabled for debugging
 
 // Body parsers
 app.use(express.json());
@@ -50,6 +58,6 @@ try {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
