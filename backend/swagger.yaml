@@ -1,0 +1,73 @@
+openapi: 3.0.0
+info:
+  title: Notes-Web Internal API
+  description: API for managing notes and authentication. Supports both HttpOnly Cookies (for UI) and API Keys (for Kiko).
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: jwt
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+paths:
+  /auth/login:
+    post:
+      summary: Login to get HttpOnly Cookie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+  
+  /notes:
+    get:
+      summary: Retrieve all notes
+      security:
+        - cookieAuth: []
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: A list of notes
+    post:
+      summary: Create a new note
+      security:
+        - cookieAuth: []
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                theme:
+                  type: string
+      responses:
+        '201':
+          description: Created note
