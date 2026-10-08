@@ -4,7 +4,8 @@ import RichTextEditor from '../components/RichTextEditor';
 export default function StickyTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme, setTheme
+  darkMode, setDarkMode, theme, setTheme,
+  currentUser, handleLogout
 }) {
   return (
     <div className="h-screen w-full overflow-y-auto bg-[#c19a6b] relative font-handwriting text-black">
@@ -20,13 +21,28 @@ export default function StickyTheme({
       <div className="absolute inset-0 bg-corkboard pointer-events-none z-0"></div>
 
       {/* Top Bar for Global Actions */}
-      <div className="relative z-10 flex justify-between items-center p-6">
-        <button 
-          onClick={addNote} 
-          className="bg-yellow-200 text-yellow-900 px-6 py-3 rounded shadow-lg transform -rotate-2 hover:rotate-0 hover:scale-110 transition-all font-bold text-3xl flex items-center gap-2"
-        >
-          <Plus strokeWidth={3} /> New Sticky
-        </button>
+      <div className="relative z-10 flex justify-between items-start p-6">
+        <div className="flex flex-col gap-4">
+          <button 
+            onClick={addNote} 
+            className="bg-yellow-200 text-yellow-900 px-6 py-3 rounded shadow-lg transform -rotate-2 hover:rotate-0 hover:scale-110 transition-all font-bold text-3xl flex items-center gap-2"
+          >
+            <Plus strokeWidth={3} /> New Sticky
+          </button>
+          
+          <div className="bg-[#eecbad] p-3 rounded shadow-md transform rotate-1 text-orange-900 font-bold flex flex-col gap-2 w-max border border-[#d6a57a]">
+            <div className="flex items-center gap-3">
+              <span className="text-xl uppercase truncate max-w-[150px]">{currentUser?.username}</span>
+              <button onClick={handleLogout} className="bg-red-400 text-white px-2 py-1 rounded text-sm hover:scale-105 transition-transform shadow">Logout</button>
+            </div>
+            <button 
+              onClick={() => window.open(`http://${window.location.hostname}:5000/api-docs`, '_blank')}
+              className="bg-cyan-600 text-white px-3 py-1.5 rounded text-sm hover:scale-105 transition-transform shadow text-center uppercase"
+            >
+              📚 API Docs
+            </button>
+          </div>
+        </div>
         <div className="flex gap-2">
           {['aesthetic', 'sticky', 'retro', 'notesos'].map((t) => (
             <button 

@@ -13,7 +13,8 @@ const aestheticColors = [
 export default function AestheticTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme, setTheme
+  darkMode, setDarkMode, theme, setTheme,
+  currentUser, handleLogout
 }) {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const activeNoteIndex = notes.findIndex(n => n.id === activeNoteId);
@@ -23,9 +24,33 @@ export default function AestheticTheme({
       
       {/* Material You Navigation Drawer */}
       <div className="w-full sm:w-80 bg-slate-100/50 dark:bg-[#1e1e1e]/50 flex flex-col p-6 z-10">
-        <div className="flex items-center gap-3 px-4 py-6 mb-4">
+        <div className="flex items-center gap-3 px-4 py-6 mb-2">
            <Sparkles className="w-8 h-8 text-pink-400 dark:text-pink-300" strokeWidth={2.5} />
            <h1 className="text-3xl font-bold tracking-tight text-gray-800 dark:text-gray-100">Notes</h1>
+        </div>
+        
+        {/* User Info & API Docs */}
+        <div className="px-2 mb-6 flex flex-col gap-2">
+          <div className="flex items-center justify-between bg-white dark:bg-[#2a2a2a] p-3 rounded-[24px] shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 flex items-center justify-center font-bold text-lg">
+                {currentUser?.username?.charAt(0).toUpperCase()}
+              </div>
+              <span className="font-bold text-gray-800 dark:text-gray-200">{currentUser?.username}</span>
+            </div>
+            <button 
+              onClick={handleLogout}
+              className="text-xs font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-full transition-colors uppercase tracking-wider"
+            >
+              Logout
+            </button>
+          </div>
+          <button 
+            onClick={() => window.open(`http://${window.location.hostname}:5000/api-docs`, '_blank')}
+            className="w-full text-left px-5 py-3 rounded-[24px] text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-[#2a2a2a] transition-colors shadow-sm"
+          >
+            📚 API Documentation
+          </button>
         </div>
         
         <div className="flex-grow overflow-y-auto space-y-2 custom-scrollbar px-2">

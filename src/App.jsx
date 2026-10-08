@@ -138,6 +138,17 @@ export default function App() {
     setCurrentUser(userData);
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.logout();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    } finally {
+      localStorage.removeItem('current_user');
+      setCurrentUser(null);
+    }
+  };
+
   // Render Auth Screen if not logged in
   if (!currentUser) {
     return <AuthScreen onLogin={handleLogin} darkMode={darkMode} theme={theme} />;
@@ -152,7 +163,8 @@ export default function App() {
   const themeProps = {
     notes, activeNoteId, setActiveNoteId, activeNote,
     addNote, deleteNote: requestDeleteNote, updateActiveNote,
-    darkMode, setDarkMode, theme, setTheme
+    darkMode, setDarkMode, theme, setTheme,
+    currentUser, handleLogout
   };
 
   const modalClasses = getModalClasses(theme);

@@ -52,7 +52,8 @@ const extractAccentColor = (url, callback) => {
 export default function NotesOSTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme, setTheme
+  darkMode, setDarkMode, theme, setTheme,
+  currentUser, handleLogout
 }) {
   // Keep track of which windows are open on the desktop
   const [openWindows, setOpenWindows] = useState([]);
@@ -196,7 +197,22 @@ export default function NotesOSTheme({
             {/* Start Menu Popover */}
             {isMenuOpen && (
               <div className="absolute bottom-12 left-0 mb-2 w-64 bg-white/90 dark:bg-[#1a1a2e]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-xl shadow-2xl p-2 flex flex-col gap-1 z-[70] animate-in fade-in slide-in-from-bottom-2">
-                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-black/5 dark:border-white/10 mb-1">
+                <div className="px-3 py-3 text-sm font-bold text-gray-800 dark:text-gray-200 border-b border-black/5 dark:border-white/10 mb-1 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-[var(--os-accent)] flex items-center justify-center text-white text-xs">
+                      {currentUser?.username?.charAt(0).toUpperCase()}
+                    </div>
+                    <span>{currentUser?.username}</span>
+                  </div>
+                  <button 
+                    onClick={handleLogout} 
+                    className="text-xs text-red-500 hover:text-red-600 transition-colors uppercase tracking-widest font-bold"
+                  >
+                    Logout
+                  </button>
+                </div>
+                
+                <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mt-1 mb-1">
                   System Settings
                 </div>
                 <button
@@ -219,6 +235,13 @@ export default function NotesOSTheme({
                 >
                   <ImageIcon className="w-5 h-5 text-purple-500" />
                   Change Background
+                </button>
+                <button
+                  onClick={() => { window.open(`http://${window.location.hostname}:5000/api-docs`, '_blank'); setIsMenuOpen(false); }}
+                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200 font-medium"
+                >
+                  <Terminal className="w-5 h-5 text-orange-500" />
+                  API Documentation
                 </button>
 
                 <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-t border-black/5 dark:border-white/10 my-1 mt-2">

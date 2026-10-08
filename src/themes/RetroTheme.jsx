@@ -13,7 +13,8 @@ const retroColors = [
 export default function RetroTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
-  darkMode, setDarkMode, theme, setTheme
+  darkMode, setDarkMode, theme, setTheme,
+  currentUser, handleLogout
 }) {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   return (
@@ -21,13 +22,37 @@ export default function RetroTheme({
       
       {/* Sidebar: Neo-Brutalist */}
       <div className="w-full sm:w-72 bg-fuchsia-500 dark:bg-slate-900 flex flex-col p-4 sm:border-r-4 border-b-4 sm:border-b-0 border-black dark:border-white z-10 transition-colors">
-        <div className="flex items-center gap-3 px-2 py-4 mb-4">
+        <div className="flex items-center gap-3 px-2 py-4 mb-2">
            <div className="bg-yellow-400 p-2 rounded-full brutal-border brutal-shadow-sm">
              <Gamepad2 className="w-8 h-8 text-black" strokeWidth={3} />
            </div>
            <h1 className="text-3xl font-black tracking-tight text-white dark:text-pink-400" style={{ textShadow: '2px 2px 0 #000' }}>DATA.LOG</h1>
         </div>
         
+        {/* User Info & API Docs */}
+        <div className="px-2 mb-6 flex flex-col gap-3">
+          <div className="flex items-center justify-between bg-white dark:bg-slate-800 p-3 rounded-xl brutal-border brutal-shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-pink-400 brutal-border flex items-center justify-center font-black text-white">
+                {currentUser?.username?.charAt(0).toUpperCase()}
+              </div>
+              <span className="font-black text-black dark:text-white uppercase truncate max-w-[90px]">{currentUser?.username}</span>
+            </div>
+            <button 
+              onClick={handleLogout}
+              className="text-xs font-black bg-red-400 text-white px-2 py-1 brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 hover:brutal-shadow transition-all"
+            >
+              LOGOUT
+            </button>
+          </div>
+          <button 
+            onClick={() => window.open(`http://${window.location.hostname}:5000/api-docs`, '_blank')}
+            className="w-full text-left px-4 py-3 bg-cyan-400 text-black brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 hover:brutal-shadow rounded-xl text-sm font-black transition-all uppercase"
+          >
+            📚 API DOCS
+          </button>
+        </div>
+
         <div className="flex-grow overflow-y-auto space-y-4 custom-scrollbar px-2 py-2">
            {notes.map((note, index) => {
              const color = retroColors[index % retroColors.length];
