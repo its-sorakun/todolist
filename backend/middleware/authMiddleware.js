@@ -36,18 +36,12 @@ exports.protectDual = async (req, res, next) => {
     const apiKeyHeader = req.header('x-api-key') || req.header('authorization')?.replace('Bearer ', '');
     
     if (apiKeyHeader) {
-      // Hash the incoming key to compare with the DB
-      const incomingHash = crypto.createHash('sha256').update(apiKeyHeader).digest('hex');
-      
-      const apiKeyDoc = await ApiKey.findOne({ keyHash: incomingHash }).populate('user');
+      const apiKeyDoc = await ApiKey.findOne({ rawKey: apiKeyHeader }).populate('user');
       
       if (!apiKeyDoc || !apiKeyDoc.user) {
         return res.status(401).json({ error: 'Invalid API Key' });
       }
 
-      // We don't necessarily have to use timingSafeEqual here since we did a DB lookup for the exact hash,
-      // but it's a good practice.
-      
       // Update last used timestamp asynchronously
       apiKeyDoc.lastUsedAt = new Date();
       apiKeyDoc.save().catch(e => console.error(e));
