@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium, Image as ImageIcon, LayoutGrid, Monitor } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Maximize2, Minimize2, Terminal, Wifi, Volume2, BatteryMedium, Image as ImageIcon, LayoutGrid, Monitor, Key } from 'lucide-react';
 import { getModalClasses } from '../utils/themeConfig';
 import RichTextEditor from '../components/RichTextEditor';
 
@@ -53,7 +53,7 @@ export default function NotesOSTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode, theme, setTheme,
-  currentUser, handleLogout
+  currentUser, handleLogout, setShowApiKeys
 }) {
   // Keep track of which windows are open on the desktop
   const [openWindows, setOpenWindows] = useState([]);
@@ -242,6 +242,13 @@ export default function NotesOSTheme({
                 >
                   <Terminal className="w-5 h-5 text-orange-500" />
                   API Documentation
+                </button>
+                <button
+                  onClick={() => { setShowApiKeys(true); setIsMenuOpen(false); }}
+                  className="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-800 dark:text-gray-200 font-medium"
+                >
+                  <Key className="w-5 h-5 text-yellow-500" />
+                  Manage API Keys
                 </button>
 
                 <div className="px-3 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border-b border-t border-black/5 dark:border-white/10 my-1 mt-2">
