@@ -101,20 +101,21 @@ To allow the user to explore and view API keys multiple times, we opted against 
 ```mermaid
 sequenceDiagram
     participant Kiko
-    participant Node Event Loop
-    participant Express Middleware
-    participant MongoDB
+    participant EventLoop as Node Event Loop
+    participant Express as Express Middleware
+    participant DB as MongoDB
+    participant Controller as Note Controller
     
-    Kiko->>Node Event Loop: HTTP TCP Stream
-    Node Event Loop->>Express Middleware: body-parser & helmet
-    Express Middleware->>Express Middleware: Check X-API-Key Header
-    Express Middleware->>MongoDB: B-Tree lookup for rawKey
-    MongoDB-->>Express Middleware: Returns ApiKey Document (with UserId)
-    Express Middleware->>Express Middleware: req.user = ApiKey.UserId
-    Express Middleware->>Note Controller: next()
-    Note Controller->>MongoDB: Fetch/Update Notes for req.user
-    MongoDB-->>Note Controller: Return Document
-    Note Controller-->>Kiko: 200 OK (JSON)
+    Kiko->>EventLoop: HTTP TCP Stream
+    EventLoop->>Express: body-parser & helmet
+    Express->>Express: Check X-API-Key Header
+    Express->>DB: B-Tree lookup for rawKey
+    DB-->>Express: Returns ApiKey Document (with UserId)
+    Express->>Express: req.user = ApiKey.UserId
+    Express->>Controller: next()
+    Controller->>DB: Fetch/Update Notes for req.user
+    DB-->>Controller: Return Document
+    Controller-->>Kiko: 200 OK (JSON)
 ```
 
 ---
