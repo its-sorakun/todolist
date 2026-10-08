@@ -1,4 +1,4 @@
-import { Sun, Moon, Trash2, Plus, Gamepad2, Settings } from 'lucide-react';
+import { Sun, Moon, Trash2, Plus, Gamepad2, Settings, Key } from 'lucide-react';
 import { useState } from 'react';
 import RichTextEditor from '../components/RichTextEditor';
 
@@ -14,7 +14,7 @@ export default function RetroTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode, theme, setTheme,
-  currentUser, handleLogout
+  currentUser, handleLogout, setShowApiKeys
 }) {
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   return (
@@ -50,6 +50,12 @@ export default function RetroTheme({
             className="w-full text-left px-4 py-3 bg-cyan-400 text-black brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 hover:brutal-shadow rounded-xl text-sm font-black transition-all uppercase"
           >
             📚 API DOCS
+          </button>
+          <button 
+            onClick={() => setShowApiKeys(true)}
+            className="w-full text-left px-4 py-3 bg-green-400 text-black brutal-border brutal-shadow-sm hover:translate-x-1 hover:-translate-y-1 hover:brutal-shadow rounded-xl text-sm font-black transition-all uppercase flex items-center gap-2"
+          >
+            <Key className="w-4 h-4" /> API KEYS
           </button>
         </div>
 
