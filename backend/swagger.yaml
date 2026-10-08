@@ -4,7 +4,7 @@ info:
   description: API for managing notes and authentication. Supports both HttpOnly Cookies (for UI) and API Keys (for Kiko).
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api/v1
+  - url: /api/v1
     description: Local Development Server
 
 components:
