@@ -1,11 +1,11 @@
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, Key } from 'lucide-react';
 import RichTextEditor from '../components/RichTextEditor';
 
 export default function StickyTheme({
   notes, activeNoteId, setActiveNoteId, activeNote,
   addNote, deleteNote, updateActiveNote,
   darkMode, setDarkMode, theme, setTheme,
-  currentUser, handleLogout
+  currentUser, handleLogout, setShowApiKeys
 }) {
   return (
     <div className="h-screen w-full overflow-y-auto bg-[#c19a6b] relative font-handwriting text-black">
@@ -40,6 +40,12 @@ export default function StickyTheme({
               className="bg-cyan-600 text-white px-3 py-1.5 rounded text-sm hover:scale-105 transition-transform shadow text-center uppercase"
             >
               📚 API Docs
+            </button>
+            <button 
+              onClick={() => setShowApiKeys(true)}
+              className="bg-purple-600 text-white px-3 py-1.5 rounded text-sm hover:scale-105 transition-transform shadow text-center uppercase flex items-center justify-center gap-2"
+            >
+              <Key className="w-4 h-4" /> API Keys
             </button>
           </div>
         </div>
