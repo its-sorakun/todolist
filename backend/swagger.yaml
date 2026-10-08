@@ -71,3 +71,48 @@ paths:
       responses:
         '201':
           description: Created note
+
+  /notes/{id}:
+    put:
+      summary: Update a note by ID
+      security:
+        - cookieAuth: []
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The note ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                theme:
+                  type: string
+      responses:
+        '200':
+          description: Updated note
+    delete:
+      summary: Delete a note by ID
+      security:
+        - cookieAuth: []
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The note ID
+      responses:
+        '200':
+          description: Note deleted
