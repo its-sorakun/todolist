@@ -1,24 +1,26 @@
 # Notes Web
 
-This project began as a shitty university assignment because universities can't seem to imagine anything beyond asking for a simple JS todolist. It was a basic todolist application at first, but then I thought of giving it a backend and some APIs so that my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), can have one more functionality of creating notes for me. 
+This project started out as a shitty university assignment. Most college web dev courses can't seem to think beyond making a basic JS todo list, so instead of just turning that in, I decided to build something I'd actually use.
 
-Since I also sometimes like making things beautiful and look aesthetic (aesthetic ka 14), I thought of making it look beautiful. At its core, it's a standard CRUD app with a Node/Express backend and a React frontend, though it implements a proper dual-auth system with secure cookies and API keys to handle programmatic access securely.
+I figured, why not let my personal assistant, [Kiko](https://github.com/its-sorakun/kiko-assistant), write and manage notes for me? So I hooked up a proper backend and wrote a bunch of REST endpoints to let it interact with the app programmatically. And since I sometimes like making things look aesthetic (aesthetic ka 14), I ended up creating multiple themes and turned it into a simple, single-page application.
+
+Under the hood, it's a straightforward CRUD app built with ReactJS, Node.js, Express, and MongoDB. It supports HTTP-only JWT cookies for browser sessions and API keys for programmatic access.
 
 ## Themes
 
-The frontend includes several themes that change the layout:
+The frontend includes several themes that change the layout. Each theme has its own flavor.
 
 - **Sky**: A minimalist, glassmorphic UI with animated CSS clouds.
 - **NotesOS**: A fake desktop environment where notes are draggable, resizable windows.
 - **Aesthetic**: A standard modern sidebar layout.
 - **Sticky**: A corkboard with sticky notes (uses SVG filters for the cork texture).
-- **Retro Degen**: A terminal-inspired brutalist layout.
+- **Retro Degen**: A retro gaming theme with chunky borders, bright arcade colors, and a gamepad icon.
 
 ## Tech Stack
 
 - **Frontend**: React, Vite, Tailwind CSS, tiptap (for the rich text editor).
 - **Backend**: Node.js, Express, MongoDB (via Mongoose).
-- **Auth**: Uses standard HTTP-only cookies for the browser UI, and a simple `x-api-key` header so Kiko can interact with the API directly.
+- **Auth**: Dual-auth flow using standard HTTP-only JWT cookies for the browser UI, and `x-api-key` headers for programmatic API access (details in [api-internals.md](api-internals.md)).
 - **Markdown**: The backend intercepts raw Markdown from Kiko and parses it into HTML so it renders correctly in the WYSIWYG editor.
 
 ## Setup Guide
