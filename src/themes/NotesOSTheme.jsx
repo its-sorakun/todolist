@@ -257,6 +257,7 @@ export default function NotesOSTheme({
                 <button onClick={() => setTheme('aesthetic')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">✨ Aesthetic (MD3)</button>
                 <button onClick={() => setTheme('sticky')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">📌 Corkboard</button>
                 <button onClick={() => setTheme('retro')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">👾 Retro Degen</button>
+                <button onClick={() => setTheme('sky')} className="flex items-center gap-3 w-full text-left px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-gray-300">☁️ Daydream (Sky)</button>
               </div>
             )}
           </div>

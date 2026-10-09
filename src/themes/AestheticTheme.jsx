@@ -103,6 +103,7 @@ export default function AestheticTheme({
               <button onClick={() => {setTheme('sticky'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'sticky' ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>📌 Corkboard</button>
               <button onClick={() => {setTheme('retro'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'retro' ? 'bg-yellow-200 dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>👾 Retro Degen</button>
               <button onClick={() => {setTheme('notesos'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'notesos' ? 'bg-purple-200 dark:bg-purple-900/40 text-purple-900 dark:text-purple-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>🌸 NotesOS</button>
+              <button onClick={() => {setTheme('sky'); setShowThemeSelector(false)}} className={`p-4 text-left rounded-[20px] font-bold transition-all ${theme === 'sky' ? 'bg-blue-200 dark:bg-blue-900/40 text-blue-900 dark:text-blue-300 shadow-sm' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:text-gray-200'}`}>☁️ Daydream (Sky)</button>
             </div>
           )}
         </div>

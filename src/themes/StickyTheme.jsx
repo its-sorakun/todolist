@@ -50,7 +50,7 @@ export default function StickyTheme({
           </div>
         </div>
         <div className="flex gap-2">
-          {['aesthetic', 'sticky', 'retro', 'notesos'].map((t) => (
+          {['aesthetic', 'sticky', 'retro', 'notesos', 'sky'].map((t) => (
             <button 
               key={t}
               onClick={() => setTheme(t)}
