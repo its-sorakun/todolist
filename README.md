@@ -56,4 +56,4 @@ The component tree is kept intentionally flat to avoid unnecessary abstraction l
 You can run both the frontend and backend with the simple VBScript provided in the root directory:
 Double-click `notes-web.vbs` to silently start MongoDB, the Node API server, and the Vite dev server in the background.
 
-The application will be accessible at `http://localhost:5173` and the API docs at `http://localhost:5000/api-docs`.
+The application will be accessible at `http://127.0.0.1:3001` and the API docs at `http://localhost:5000/api-docs`.
