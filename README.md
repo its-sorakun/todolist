@@ -1,43 +1,25 @@
 # Notes Web
 
-A React-based single-page application for taking notes. This project began as a shitty, soulless university assignment because modern computer science education is apparently incapable of imagining anything beyond a painfully generic JS todolist. Instead of submitting another cookie-cutter CRUD app that looks like it was designed in 2005, I decided to take out my frustration on it.
+A basic React-based note taking application. This project began as a shitty university assignment because universities can't seem to imagine anything beyond asking for a simple JS todolist. Since I enjoy designing things, I decided to take out my frustration on the UI and extend it a bit further.
 
-I like designing things—whether it's web or IRL—and I refuse to build boring software. So I threw out their unimaginative requirements, wired up ReactJS to make it a proper single-page application, and integrated it directly with my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko-assistant), through a custom REST API. This completely mutated it from a disposable academic chore into an actual, living application.
+At its core, it's just a standard CRUD app with a Node/Express backend and a React frontend. However, to make it more useful than a disposable academic chore, I integrated it with my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), via REST APIs so it can read and write notes programmatically.
 
-It became my personal sandbox to prove how far UI paradigms and low-level DOM mechanics can be pushed in a browser, without relying on the bloated enterprise libraries that universities love to preach about.
+## Themes
 
-## Themes & Paradigms
+The frontend includes several themes that change the layout:
 
-The application doesn't just change colors; it completely swaps the layout and interaction model based on the selected theme.
+- **Sky**: A minimalist, glassmorphic UI with animated CSS clouds.
+- **NotesOS**: A fake desktop environment where notes are draggable, resizable windows.
+- **Aesthetic**: A standard modern sidebar layout.
+- **Sticky**: A corkboard with sticky notes (uses SVG filters for the cork texture).
+- **Retro Degen**: A terminal-inspired brutalist layout.
 
-- **Sky**: An ultra-minimalist, floating aesthetic. It features an edge-to-edge, backdrop-blurred glassmorphic sidebar and procedural drifting clouds in the background (powered entirely by GPU-accelerated CSS and SVG filters). 
-- **NotesOS**: A desktop environment built in the DOM. Notes are rendered as standalone windows that can be dragged by their title bars, resized from any of the four corners, minimized, or maximized to perfectly snap against the taskbar. It implements its own window coordinate math natively in React.
-- **Aesthetic (MD3)**: A modern, conventional sidebar-driven layout inspired by Material Design 3.
-- **Sticky (Corkboard)**: A physical metaphor. Notes are rendered as sticky notes pinned to a corkboard. The cork texture uses an inline SVG Data URI with the `<feTurbulence>` primitive to generate procedural noise without any image assets.
-- **Retro Degen**: A brutalist, terminal-inspired layout with stark colors and hard shadows.
+## Tech Stack
 
-## Mechanics
-
-- **Rich Text**: Uses `tiptap` as a headless wrapper around ProseMirror to provide a clean WYSIWYG editing experience.
-- **Dual Authentication**: Implements a strict dual-auth system. Human users use HTTP-only cookies in the browser, while external agents (like Kiko) authenticate via plaintext API keys passed in `x-api-key` headers to execute CRUD operations remotely.
-- **Window Management (NotesOS)**: Draggable windows are handled natively. When dragging, `setPointerCapture` ensures the drag event isn't lost if the mouse moves too fast. Resizing calculates deltas from the `startX`/`startY` coordinates and dynamically updates the bounds. 
-- **Persistence**: Relies on a MongoDB backend connected via Mongoose to store the HTML string of the note, and handles raw markdown dynamically parsing it mechanically via Turndown so Kiko doesn't break the UI.
-
-## Architecture
-
-The component tree is kept intentionally flat to avoid unnecessary abstraction layers.
-
-- `App.jsx`: The global state container. It handles the API fetching, routing, active theme hydration, and renders the corresponding theme component.
-- `themes/*`: Each theme (`NotesOSTheme`, `SkyTheme`, etc.) receives the notes state and mutation functions as props. They are fully responsible for their own internal UI layout and local interactions.
-- `components/RichTextEditor.jsx`: A universal text editor component shared across all themes.
-
-## Backend Infrastructure
-
-Because persisting state entirely in `localStorage` wasn't enough for a real application, I built a dedicated backend from scratch. It abandons bloated enterprise frameworks in favor of a raw, mechanical Node.js/Express server paired with MongoDB. 
-
-- **Custom Dual-Auth**: To allow my AI assistant Kiko to modify notes programmatically while I use the browser UI, the backend implements a mechanical dual-authentication intercept. Human users get secured HTTP-only JWT cookies, while Kiko bypasses the browser flow using a raw plaintext `x-api-key` header.
-- **Markdown AST Intercept**: Kiko talks in pure markdown, but the UI expects an HTML string. Instead of forcing Kiko to write HTML, the backend intercepts incoming markdown payloads and builds the required HTML structure on the fly before it hits the database.
-- **No-Nonsense REST API**: Fully documented with Swagger, exposing clean, predictable CRUD routes so external scripts can easily hook into the ecosystem without friction.
+- **Frontend**: React, Vite, Tailwind CSS, tiptap (for the rich text editor).
+- **Backend**: Node.js, Express, MongoDB (via Mongoose).
+- **Auth**: Uses standard HTTP-only cookies for the browser UI, and a simple `x-api-key` header so Kiko can interact with the API directly.
+- **Markdown**: The backend intercepts raw Markdown from Kiko and parses it into HTML so it renders correctly in the WYSIWYG editor.
 
 ## Setup Guide
 
