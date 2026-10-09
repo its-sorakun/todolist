@@ -2,7 +2,7 @@
 
 This project began as a shitty university assignment because universities can't seem to imagine anything beyond asking for a simple JS todolist. It was a basic todolist application at first, but then I thought of giving it a backend and some APIs so that my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), can have one more functionality of creating notes for me. 
 
-Since I also sometimes like making things beautiful and look aesthetic (aesthetic ka 14), I thought of making it look beautiful. At its core, it's just a standard CRUD app with a Node/Express backend and a React frontend.
+Since I also sometimes like making things beautiful and look aesthetic (aesthetic ka 14), I thought of making it look beautiful. At its core, it's a standard CRUD app with a Node/Express backend and a React frontend, but it's a little better than the basic CRUD apps uni teaches us since it actually includes proper security and API keys.
 
 ## Themes
 
