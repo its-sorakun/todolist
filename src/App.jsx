@@ -3,6 +3,7 @@ import AestheticTheme from './themes/AestheticTheme';
 import RetroTheme from './themes/RetroTheme';
 import NotesOSTheme from './themes/NotesOSTheme';
 import StickyTheme from './themes/StickyTheme';
+import SkyTheme from './themes/SkyTheme';
 import AuthScreen from './components/AuthScreen';
 import ApiKeyManager from './components/ApiKeyManager';
 import { getModalClasses } from './utils/themeConfig';
@@ -177,6 +178,7 @@ export default function App() {
       {theme === 'retro' && <RetroTheme {...themeProps} />}
       {theme === 'notesos' && <NotesOSTheme {...themeProps} />}
       {theme === 'sticky' && <StickyTheme {...themeProps} />}
+      {theme === 'sky' && <SkyTheme {...themeProps} />}
 
       {showApiKeys && <ApiKeyManager onClose={() => setShowApiKeys(false)} theme={theme} />}
 
