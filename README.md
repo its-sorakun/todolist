@@ -2,7 +2,7 @@
 
 A React-based single-page application for taking notes. This project began as a shitty, soulless university assignment because modern computer science education is apparently incapable of imagining anything beyond a painfully generic JS todolist. Instead of submitting another cookie-cutter CRUD app that looks like it was designed in 2005, I decided to take out my frustration on it.
 
-I like designing things—whether it's web or IRL—and I refuse to build boring software. So I threw out their unimaginative requirements, wired up ReactJS to make it a proper single-page application, and integrated it directly with my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), through a custom REST API. This completely mutated it from a disposable academic chore into an actual, living application.
+I like designing things—whether it's web or IRL—and I refuse to build boring software. So I threw out their unimaginative requirements, wired up ReactJS to make it a proper single-page application, and integrated it directly with my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko-assistant), through a custom REST API. This completely mutated it from a disposable academic chore into an actual, living application.
 
 It became my personal sandbox to prove how far UI paradigms and low-level DOM mechanics can be pushed in a browser, without relying on the bloated enterprise libraries that universities love to preach about.
 
@@ -30,6 +30,14 @@ The component tree is kept intentionally flat to avoid unnecessary abstraction l
 - `App.jsx`: The global state container. It handles the API fetching, routing, active theme hydration, and renders the corresponding theme component.
 - `themes/*`: Each theme (`NotesOSTheme`, `SkyTheme`, etc.) receives the notes state and mutation functions as props. They are fully responsible for their own internal UI layout and local interactions.
 - `components/RichTextEditor.jsx`: A universal text editor component shared across all themes.
+
+## Backend Infrastructure
+
+Because persisting state entirely in `localStorage` wasn't enough for a real application, I built a dedicated backend from scratch. It abandons bloated enterprise frameworks in favor of a raw, mechanical Node.js/Express server paired with MongoDB. 
+
+- **Custom Dual-Auth**: To allow my AI assistant Kiko to modify notes programmatically while I use the browser UI, the backend implements a mechanical dual-authentication intercept. Human users get secured HTTP-only JWT cookies, while Kiko bypasses the browser flow using a raw plaintext `x-api-key` header.
+- **Markdown AST Intercept**: Kiko talks in pure markdown, but the UI expects an HTML string. Instead of forcing Kiko to write HTML, the backend intercepts incoming markdown payloads and builds the required HTML structure on the fly before it hits the database.
+- **No-Nonsense REST API**: Fully documented with Swagger, exposing clean, predictable CRUD routes so external scripts can easily hook into the ecosystem without friction.
 
 ## Setup Guide
 
