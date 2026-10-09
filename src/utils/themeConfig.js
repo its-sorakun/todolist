@@ -30,6 +30,16 @@ export const getModalClasses = (theme) => {
         buttonSubmit: 'px-6 py-2.5 bg-pink-400 hover:bg-pink-500 text-white font-bold rounded-xl shadow-lg shadow-pink-500/30 transition-all',
         input: 'w-full bg-white/30 dark:bg-black/30 border border-white/40 dark:border-white/10 rounded-xl p-3 outline-none focus:border-pink-400 transition-colors text-gray-900 dark:text-white mb-4 placeholder-gray-500'
       };
+    case 'sky':
+      return {
+        overlay: 'bg-black/20 backdrop-blur-sm',
+        container: 'bg-white/10 backdrop-blur-md border border-white/30 rounded-3xl p-8 font-handwriting shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]',
+        title: 'text-4xl font-bold mb-6 text-white drop-shadow',
+        text: 'text-white text-2xl drop-shadow font-medium',
+        buttonCancel: 'px-6 py-2.5 bg-white/10 hover:bg-white/20 transition-colors font-bold rounded-xl text-white drop-shadow text-xl',
+        buttonSubmit: 'px-6 py-2.5 bg-white text-[#1a66a8] font-bold rounded-xl shadow-lg transition-all text-xl hover:scale-105',
+        input: 'w-full bg-white/20 border border-white/40 rounded-xl p-3 outline-none text-white placeholder-white/60 mb-4 text-2xl font-handwriting'
+      };
     default: // aesthetic
       return {
         overlay: 'bg-black/40 backdrop-blur-sm',
