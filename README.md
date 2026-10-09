@@ -1,8 +1,10 @@
 # Notes Web
 
-A React-based single-page application for taking notes. This project began as a shitty university assignment because universities can't go beyond creating a simple js todolist application. I thought to extend it further because sometimes I like designing stuffs whether its web or irl. 
+A React-based single-page application for taking notes. This project began as a shitty, soulless university assignment because modern computer science education is apparently incapable of imagining anything beyond a painfully generic JS todolist. Instead of submitting another cookie-cutter CRUD app that looks like it was designed in 2005, I decided to take out my frustration on it.
 
-I implemented ReactJS to make it a full single-page application and integrated it with my personal assistant, [Kiko](https://github.com/its-sorakun/kiko), through REST APIs. This completely evolved it into a proper application rather than some shitty university assignment. It served as a sandbox to investigate how far UI paradigms and mechanics can be pushed in a browser without relying on heavy external state managers or windowing libraries.
+I like designing things—whether it's web or IRL—and I refuse to build boring software. So I threw out their unimaginative requirements, wired up ReactJS to make it a proper single-page application, and integrated it directly with my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), through a custom REST API. This completely mutated it from a disposable academic chore into an actual, living application.
+
+It became my personal sandbox to prove how far UI paradigms and low-level DOM mechanics can be pushed in a browser, without relying on the bloated enterprise libraries that universities love to preach about.
 
 ## Themes & Paradigms
 
