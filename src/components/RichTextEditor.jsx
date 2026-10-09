@@ -8,7 +8,7 @@ import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
-import { Bold, Italic, List, ListOrdered, Image as ImageIcon, Heading2, FileCode2, Table as TableIcon, CheckSquare, Maximize, Minimize } from 'lucide-react'
+import { Bold, Italic, List, ListOrdered, Image as ImageIcon, Heading2, FileCode2, Table as TableIcon, CheckSquare, Maximize, Minimize, PenTool, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { marked } from 'marked'
 import TurndownService from 'turndown'
@@ -163,6 +163,7 @@ export default function RichTextEditor({ content, onChange, editable = true, the
   const [imageUrl, setImageUrl] = useState("");
   const [imageWidth, setImageWidth] = useState("");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showToolbar, setShowToolbar] = useState(theme !== 'sky');
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -269,31 +270,45 @@ export default function RichTextEditor({ content, onChange, editable = true, the
   return (
     <div className="flex flex-col h-full w-full">
       {editable && (
-        <div className="flex items-center gap-1 p-2 border-b border-black/10 dark:border-white/10 flex-shrink-0 flex-wrap opacity-50 hover:opacity-100 transition-opacity">
-          {!isMarkdownMode && (
+        <div className={`flex items-center gap-1 p-2 flex-shrink-0 flex-wrap transition-opacity ${theme === 'sky' ? 'border-b border-white/20 pb-4 text-white opacity-80 hover:opacity-100 drop-shadow' : 'border-b border-black/10 dark:border-white/10 opacity-50 hover:opacity-100'}`}>
+          <button 
+            onClick={() => setShowToolbar(!showToolbar)} 
+            className={`p-1.5 rounded transition-all flex items-center gap-2 font-bold ${showToolbar ? 'bg-black/10 dark:bg-white/10' : 'hover:bg-black/10 dark:hover:bg-white/10'}`} 
+            title="Toggle Toolbar"
+          >
+            {showToolbar ? <X size={18} /> : <PenTool size={18} />}
+            {!showToolbar && <span className="text-sm opacity-80 uppercase tracking-widest">tools</span>}
+          </button>
+          
+          {showToolbar && (
             <>
-              <button onClick={() => editor.chain().focus().toggleBold().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bold') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bold"><Bold size={18} /></button>
-              <button onClick={() => editor.chain().focus().toggleItalic().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('italic') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Italic"><Italic size={18} /></button>
-              <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Heading"><Heading2 size={18} /></button>
               <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
-              <button onClick={handleDecreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Decrease Font Size">A-</button>
-              <button onClick={handleIncreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Increase Font Size">A+</button>
-              <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
-              <button onClick={() => editor.chain().focus().toggleTaskList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('taskList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Checklist"><CheckSquare size={18} /></button>
-              <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bulletList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bullet List"><List size={18} /></button>
-              <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('orderedList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Numbered List"><ListOrdered size={18} /></button>
-              <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
-              <button onClick={addImage} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors`} title="Add Image"><ImageIcon size={18} /></button>
-              <button onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors`} title="Insert Table"><TableIcon size={18} /></button>
+              {!isMarkdownMode && (
+                <>
+                  <button onClick={() => editor.chain().focus().toggleBold().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bold') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bold"><Bold size={18} /></button>
+                  <button onClick={() => editor.chain().focus().toggleItalic().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('italic') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Italic"><Italic size={18} /></button>
+                  <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Heading"><Heading2 size={18} /></button>
+                  <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
+                  <button onClick={handleDecreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Decrease Font Size">A-</button>
+                  <button onClick={handleIncreaseFontSize} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-sm`} title="Increase Font Size">A+</button>
+                  <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
+                  <button onClick={() => editor.chain().focus().toggleTaskList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('taskList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Checklist"><CheckSquare size={18} /></button>
+                  <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('bulletList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Bullet List"><List size={18} /></button>
+                  <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${editor.isActive('orderedList') ? 'bg-black/20 dark:bg-white/20' : ''}`} title="Numbered List"><ListOrdered size={18} /></button>
+                  <div className="w-px h-5 bg-black/20 dark:bg-white/20 mx-1"></div>
+                  <button onClick={addImage} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors`} title="Add Image"><ImageIcon size={18} /></button>
+                  <button onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors`} title="Insert Table"><TableIcon size={18} /></button>
+                </>
+              )}
+              
+              {isMarkdownMode && <div className="ml-2 text-sm font-bold opacity-60 tracking-wider">MARKDOWN EDIT</div>}
+              <div className="flex-grow"></div>
+              <button onClick={toggleFullscreen} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors mr-1`} title="Toggle Fullscreen">
+                {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
+              </button>
+              <button onClick={toggleMarkdownMode} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isMarkdownMode ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}`} title="Toggle Markdown View"><FileCode2 size={18} /></button>
             </>
           )}
-          
-          {isMarkdownMode && <div className="ml-2 text-sm font-bold opacity-60 tracking-wider">MARKDOWN EDIT</div>}
-          <div className="flex-grow"></div>
-          <button onClick={toggleFullscreen} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors mr-1`} title="Toggle Fullscreen">
-            {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
-          </button>
-          <button onClick={toggleMarkdownMode} className={`p-1.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors ${isMarkdownMode ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}`} title="Toggle Markdown View"><FileCode2 size={18} /></button>
         </div>
       )}
       <div className={`flex-grow p-2 ${editable ? 'overflow-y-auto custom-scrollbar' : 'overflow-hidden pointer-events-none mask-bottom'}`}>
@@ -301,7 +316,7 @@ export default function RichTextEditor({ content, onChange, editable = true, the
           <textarea
             value={markdownText}
             onChange={(e) => setMarkdownText(e.target.value)}
-            className="w-full h-full min-h-[300px] bg-transparent outline-none resize-none font-mono text-lg"
+            className={`w-full h-full min-h-[300px] bg-transparent outline-none resize-none font-mono text-lg ${theme === 'sky' ? 'text-white' : ''}`}
             placeholder="Write markdown here..."
             disabled={!editable}
           />
