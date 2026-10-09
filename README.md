@@ -1,11 +1,14 @@
 # Notes Web
 
-A React-based single-page application for taking notes. This project began as a simple to-do list but evolved into a multi-theme rich-text editor to investigate how far UI paradigms can be pushed in a browser without relying on heavy external state managers or windowing libraries.
+A React-based single-page application for taking notes. This project began as a shitty university assignment because universities can't go beyond creating a simple js todolist application. I thought to extend it further because sometimes I like designing stuffs whether its web or irl. 
+
+I implemented ReactJS to make it a full single-page application and integrated it with my personal assistant, [Kiko](https://github.com/its-sorakun/kiko), through REST APIs. This completely evolved it into a proper application rather than some shitty university assignment. It served as a sandbox to investigate how far UI paradigms and mechanics can be pushed in a browser without relying on heavy external state managers or windowing libraries.
 
 ## Themes & Paradigms
 
 The application doesn't just change colors; it completely swaps the layout and interaction model based on the selected theme.
 
+- **Sky**: An ultra-minimalist, floating aesthetic. It features an edge-to-edge, backdrop-blurred glassmorphic sidebar and procedural drifting clouds in the background (powered entirely by GPU-accelerated CSS and SVG filters). 
 - **NotesOS**: A desktop environment built in the DOM. Notes are rendered as standalone windows that can be dragged by their title bars, resized from any of the four corners, minimized, or maximized to perfectly snap against the taskbar. It implements its own window coordinate math natively in React.
 - **Aesthetic (MD3)**: A modern, conventional sidebar-driven layout inspired by Material Design 3.
 - **Sticky (Corkboard)**: A physical metaphor. Notes are rendered as sticky notes pinned to a corkboard. The cork texture uses an inline SVG Data URI with the `<feTurbulence>` primitive to generate procedural noise without any image assets.
@@ -14,15 +17,16 @@ The application doesn't just change colors; it completely swaps the layout and i
 ## Mechanics
 
 - **Rich Text**: Uses `tiptap` as a headless wrapper around ProseMirror to provide a clean WYSIWYG editing experience.
+- **Dual Authentication**: Implements a strict dual-auth system. Human users use HTTP-only cookies in the browser, while external agents (like Kiko) authenticate via plaintext API keys passed in `x-api-key` headers to execute CRUD operations remotely.
 - **Window Management (NotesOS)**: Draggable windows are handled natively. When dragging, `setPointerCapture` ensures the drag event isn't lost if the mouse moves too fast. Resizing calculates deltas from the `startX`/`startY` coordinates and dynamically updates the bounds. 
-- **Persistence**: There is no backend. The application relies entirely on `localStorage` to persist the state between sessions. This includes the notes themselves (saved as HTML strings), the active theme, the user's uploaded local wallpaper (saved as a base64 Data URL), and the absolute `x/y/width/height` geometry of every window in NotesOS so they stay exactly where they were left.
+- **Persistence**: Relies on a MongoDB backend connected via Mongoose to store the HTML string of the note, and handles raw markdown dynamically parsing it mechanically via Turndown so Kiko doesn't break the UI.
 
 ## Architecture
 
 The component tree is kept intentionally flat to avoid unnecessary abstraction layers.
 
-- `App.jsx`: The global state container. It handles the `localStorage` hydration for notes and the active theme, and renders the corresponding theme component.
-- `themes/*`: Each theme (`NotesOSTheme`, `AestheticTheme`, etc.) receives the notes state and mutation functions as props. They are fully responsible for their own internal UI layout and local interactions (like window coordinates).
+- `App.jsx`: The global state container. It handles the API fetching, routing, active theme hydration, and renders the corresponding theme component.
+- `themes/*`: Each theme (`NotesOSTheme`, `SkyTheme`, etc.) receives the notes state and mutation functions as props. They are fully responsible for their own internal UI layout and local interactions.
 - `components/RichTextEditor.jsx`: A universal text editor component shared across all themes.
 
 ## Setup Guide
@@ -32,6 +36,7 @@ The component tree is kept intentionally flat to avoid unnecessary abstraction l
   ```bash
   node -v
   ```
+- MongoDB running locally or a connection string ready.
 
 ### Installation
 
@@ -43,13 +48,12 @@ The component tree is kept intentionally flat to avoid unnecessary abstraction l
 2. Install the required dependencies:
    ```bash
    npm install
+   cd backend && npm install
    ```
 
 ### Running Locally
 
-Start the local development server:
-```bash
-npm run dev
-```
+You can run both the frontend and backend with the simple VBScript provided in the root directory:
+Double-click `notes-web.vbs` to silently start MongoDB, the Node API server, and the Vite dev server in the background.
 
-The application will be accessible at `http://localhost:5173`.
+The application will be accessible at `http://localhost:5173` and the API docs at `http://localhost:5000/api-docs`.
