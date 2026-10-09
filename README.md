@@ -1,8 +1,8 @@
 # Notes Web
 
-A basic React-based note taking application. This project began as a shitty university assignment because universities can't seem to imagine anything beyond asking for a simple JS todolist. Since I enjoy designing things, I decided to take out my frustration on the UI and extend it a bit further.
+This project began as a shitty university assignment because universities can't seem to imagine anything beyond asking for a simple JS todolist. It was a basic todolist application at first, but then I thought of giving it a backend and some APIs so that my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), can have one more functionality of creating notes for me. 
 
-At its core, it's just a standard CRUD app with a Node/Express backend and a React frontend. However, to make it more useful than a disposable academic chore, I integrated it with my personal AI assistant, [Kiko](https://github.com/its-sorakun/kiko), via REST APIs so it can read and write notes programmatically.
+Since I also sometimes like making things beautiful and look aesthetic (aesthetic ka 14), I thought of making it look beautiful. At its core, it's just a standard CRUD app with a Node/Express backend and a React frontend.
 
 ## Themes
 
